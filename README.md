@@ -1,5 +1,14 @@
 # ChromeDragon
 
+Group: KI-47
+Student: Boiko Yurii
+Variant: 3
+HW i-face: I2C
+Game: chrome dragon game
+Data driven format: BINARY
+
+Project: Messenger with translating(Bachelor work)
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.0.3.
 
 ## Development server
