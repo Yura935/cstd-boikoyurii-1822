@@ -1,0 +1,16 @@
+main {
+  display: flex;
+}
+
+app-user-list,
+app-user-messanger {
+  min-height: 100vh;
+}
+
+app-user-list {
+  width: 25%;
+}
+
+app-user-messanger {
+  width: 75%;
+}

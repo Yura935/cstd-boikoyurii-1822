@@ -1,0 +1,35 @@
+{
+    "sidebar":{
+        "settings":"Налаштування",
+        "lang":"Мова",
+        "fontSize":"Розмір шрифту",
+        "nightMode": "Темний режим"
+    },
+    "search-placeholder": "Знайти або почати новий чат...",
+    "contacts": "Чати",
+    "text-placeholder": "Пишіть ваше повідомлення",
+    "editData": {
+        "head": "Редагування даних",
+        "buttonUpload": "Завантажити картинку",
+        "image": "Вибрати файл",
+        "userName": "Ім'я користувача:",
+        "userNamePlaceholder":"Введіть ім'я користувача",
+        "email": "Електронна скринька:",
+        "emailPlaceholder":"Введіть електронну скриньку",
+        "button": "Оновити дані"
+    },
+    "auth": {
+        "headSignIn":"Авторизація",
+        "headSignUp":"Реєстрація",
+        "userName":"Ім'я користувача:",
+        "userNamePlaceholder":"Введіть ім'я користувача",
+        "email":"Електронна скринька:",
+        "emailPlaceholder":"Введіть електронну скриньку",
+        "password":"Пароль:",
+        "passwordPlaceholder":"Введіть пароль",
+        "wantSignIn":"Авторизація",
+        "wantSignUp":"Реєстрація",
+        "signInButton":"Ввійти",
+        "signUpButton":"Зареєструватися"
+    }
+}

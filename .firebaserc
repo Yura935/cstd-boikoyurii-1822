@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "clearchat-e1062": {
+      "hosting": {
+        "taskChat": [
+          "clearchat-e1062"
+        ]
+      }
+    }
+  }
+}

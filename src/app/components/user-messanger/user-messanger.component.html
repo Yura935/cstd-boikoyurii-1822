@@ -1,0 +1,52 @@
+<section class="userInfo" [style.backgroundColor]="bgColorHead" (click)="openUserInfo()">
+    <div class="userInfo-image"></div>
+    <div class="userInfo-name" [style.color]='textColor'>
+        <h2>Josefina</h2>
+    </div>
+</section>
+
+<section class="messanger" [style.backgroundColor]="bgColor">
+    <div class="messanger-items">
+        <div class="messanger-items__left">
+            <div class="messanger-items__left--image"></div>
+            <div class="messanger-items__left--message">
+                <div class="message-text">Quick come to the meeting room 1B, we have a big server issue</div>
+                <div class="message-date">4/22/17, 4:00 AM</div>
+            </div>
+        </div>
+        <div class="messanger-items__right">
+            <div class="messanger-items__right--message">
+                <div class="message-text">I'm having breakfast right now, can't you wait for 10 minutes?</div>
+                <div class="message-date">4/22/17, 4:05 AM</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="blockSending" [style.backgroundColor]="bgColor">
+    <div class="blockSending-inner">
+        <input type="text" placeholder="{{ 'text-placeholder' | translate }}">
+        <div class="send-icon"></div>
+    </div>
+</section>
+
+<section class="contactInfo" [style.display]="isClick">
+    <div class="contactInfo-inner" [style.backgroundColor]="bgColorHead" [style.color]='textColor'>
+        <div class="head">
+            <div class="close" [style.backgroundImage]="currentElement" (click)="openUserInfo()"></div>
+        </div>
+        <div class="body">
+            <div class="item image">
+                <img src="../../../assets/icons/user.svg" alt="image">
+                <h3>Josefina</h3>
+            </div>
+            <div class="item">
+                <h4>Email</h4>
+                <p>josefina@hmail.com</p>
+            </div>
+            <div class="send" (click)="openUserInfo()">
+                <p>Send message</p>
+            </div>
+        </div>
+    </div>
+</section>
