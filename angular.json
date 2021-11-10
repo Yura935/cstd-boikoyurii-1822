@@ -3,14 +3,14 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "chromeDragon": {
+    "taskChat": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
         },
         "@schematics/angular:application": {
-          "strict": true
+          "strict": false
         }
       },
       "root": "",
@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/chromeDragon",
+            "outputPath": "dist/taskChat",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -72,10 +72,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "chromeDragon:build:production"
+              "browserTarget": "taskChat:build:production"
             },
             "development": {
-              "browserTarget": "chromeDragon:build:development"
+              "browserTarget": "taskChat:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -83,7 +83,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "chromeDragon:build"
+            "browserTarget": "taskChat:build"
           }
         },
         "test": {
@@ -103,9 +103,13 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {}
         }
       }
     }
   },
-  "defaultProject": "chromeDragon"
+  "defaultProject": "taskChat"
 }

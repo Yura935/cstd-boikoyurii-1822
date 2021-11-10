@@ -1,0 +1,87 @@
+.container {
+  min-height: 100vh;
+  width: 100%;
+  background-image: url('../../../assets/icons/mainBackground.jpg');
+  padding: 70px 150px;
+
+  .row {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    form {
+      width: 420px;
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 15px;
+      background: linear-gradient(to bottom, #EB5757, #000000);
+      box-shadow: 0 0 10px 2px black;
+      color: lightgray;
+
+      .head {
+        height: 70px;
+        text-align: center;
+        padding: 10px;
+
+        h3 {
+          font-size: 26px;
+          font-family: sans-serif;
+        }
+      }
+
+      .body {
+        .item {
+          display: flex;
+          flex-direction: column;
+          font-family: sans-serif;
+          margin-bottom: 20px;
+
+          label {
+            font-size: 20px;
+            margin-bottom: 10px;
+          }
+
+          input {
+            height: 30px;
+            outline: none;
+            border: 1px solid gray;
+            border-radius: 3px;
+            padding-left: 10px;
+          }
+        }
+      }
+
+      .buttons {
+        height: auto;
+
+        .box {
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          padding-top: 10px;
+
+          input {
+            height: 30px;
+            outline: none;
+            border: 1px solid gray;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, #1D4350, #8b1e16);
+            color: #fff;
+          }
+
+          .change {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            cursor: pointer;
+            font-family: sans-serif;
+            margin-bottom: 10px;
+          }
+        }
+      }
+    }
+  }
+}
