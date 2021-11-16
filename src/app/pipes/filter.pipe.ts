@@ -7,15 +7,11 @@ export class FilterPipe implements PipeTransform {
 
   transform(value: Array<any>, field: string): Array<any> {
     if (!value) {
-      return value;
+      return [];
     }
     if (!field) {
       return [];
     }
-    if (field && value) {
-      return value.filter(item => item.userName.toLowerCase().includes(field.toLowerCase()));
-    }
-    return value;
+    return value.filter(item => item.userName.includes(field));
   }
-
 }

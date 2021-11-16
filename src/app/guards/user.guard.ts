@@ -13,14 +13,12 @@ export class UserGuard implements CanActivate {
     return this.checkLogin();
   }
 
-  private checkLogin(): boolean {
+  checkLogin(): boolean {
     if (localStorage.getItem('user')) {
-      const CURRENT_USER = JSON.parse(localStorage.getItem('user'));
-      if (CURRENT_USER != null) {
-        return true;
-      }
+      return true;
     }
-    this.router.navigateByUrl('login');
+    this.router.navigate(['/login']);
     return false;
   }
 }
+

@@ -30,11 +30,11 @@ export class AuthComponent implements OnInit {
   }
 
   signUp(): void {
-    this.dataService.signUp(this.authForm);
+    this.dataService.signUp(this.authForm.value);
   }
 
   signIn(): void {
-    this.dataService.signIn(this.signInForm);
+    this.dataService.signIn(this.signInForm.value);
   }
 
   changeChoise(): void {
