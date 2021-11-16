@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { IUserData } from '../interfaces/userData.interface';
@@ -23,15 +22,14 @@ export class DataService {
     this.userRef = this.db.collection(this.dbPath);
   }
 
-  signUp(formGroup: FormGroup): void {
-    this.auth.createUserWithEmailAndPassword(formGroup.get('email').value, formGroup.get('password').value).then(response => {
+  signUp(formGroup): void {
+    this.auth.createUserWithEmailAndPassword(formGroup.email, formGroup.password).then(response => {
       const user = {
-        userName: formGroup.get('userName').value,
-        email: formGroup.get('email').value,
+        userName: formGroup.userName,
+        email: formGroup.email,
         image: this.baseImage,
         contacts: []
       };
-      console.log(user);
       this.db.collection('users').add({ ...user })
         .then(collection => {
           collection.get()
@@ -47,8 +45,8 @@ export class DataService {
     })
   }
 
-  signIn(myform: FormGroup): void {
-    this.auth.signInWithEmailAndPassword(myform.get('email').value, myform.get('password').value)
+  signIn(myform): void {
+    this.auth.signInWithEmailAndPassword(myform.email, myform.password)
       .then(userResponse => {
         this.db.collection('users').ref.where('email', '==', userResponse.user.email).onSnapshot(
           snap => {
@@ -89,16 +87,8 @@ export class DataService {
     return this.userRef.ref.where('nickName', '==', name);
   }
 
-  create(contact: IUserData): any {
-    return this.userRef.add({ ...contact });
-  }
-
   update(id: string, data: any): Promise<void> {
     return this.userRef.doc(id).update({ ...data });
-  }
-
-  delete(id: string): Promise<void> {
-    return this.userRef.doc(id).delete();
   }
 
   setMainHeadColor(color: string) {

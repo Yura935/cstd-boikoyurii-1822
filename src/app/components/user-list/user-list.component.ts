@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DataService } from 'src/app/services/data.service';
 import { map, take } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
+import { IUserData } from 'src/app/interfaces/userData.interface';
 
 @Component({
   selector: 'app-user-list',
@@ -16,7 +17,7 @@ export class UserListComponent implements OnInit {
   isDark: boolean = false;
   bgColorHead: string = 'gray';
   bgColor: string = '#fefefe';
-  user;
+  user: IUserData;
   getAll: boolean = true;
   search: string = '';
   display: string = 'none';
@@ -80,6 +81,8 @@ export class UserListComponent implements OnInit {
   }
 
   readFile(file): void {
+    console.log(file);
+
     var reader = new FileReader();
     let image;
     reader.onload = (e) => {
@@ -93,7 +96,6 @@ export class UserListComponent implements OnInit {
     if (JSON.parse(localStorage.getItem('user'))) {
       this.user = JSON.parse(localStorage.getItem('user'));
       this.image = this.user.image;
-      console.log(this.user);
     }
   }
 
@@ -136,5 +138,6 @@ export class UserListComponent implements OnInit {
     this.display === "none" ? this.display = "block" : this.display = "none";
     this.userName = this.user.userName;
     this.email = this.user.email;
+    this.image = this.user.image;
   }
 }
