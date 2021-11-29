@@ -1,8 +1,8 @@
 {
-    "sidebar":{
-        "settings":"Settings",
-        "lang":"Language",
-        "fontSize":"Font Size",
+    "sidebar": {
+        "settings": "Settings",
+        "lang": "Language",
+        "fontSize": "Font Size",
         "nightMode": "Night Mode"
     },
     "search-placeholder": "Search or start new chat...",
@@ -13,23 +13,29 @@
         "buttonUpload": "Upload image",
         "image": "Choose file",
         "userName": "Username:",
-        "userNamePlaceholder":"Type username...",
+        "userNamePlaceholder": "Type username...",
         "email": "Email:",
-        "emailPlaceholder":"Type email...",
+        "emailPlaceholder": "Type email...",
         "button": "Update data"
     },
     "auth": {
-        "headSignIn":"Authorization",
-        "headSignUp":"Registration",
-        "userName":"Username:",
-        "userNamePlaceholder":"Type username...",
-        "email":"Email:",
-        "emailPlaceholder":"Type email...",
-        "password":"Password:",
-        "passwordPlaceholder":"Type password...",
-        "wantSignIn":"Authorization",
-        "wantSignUp":"Registration",
-        "signInButton":"Sign In",
-        "signUpButton":"Sign Up"
-    }
+        "headSignIn": "Authorization",
+        "headSignUp": "Registration",
+        "userName": "Username:",
+        "userNamePlaceholder": "Type username...",
+        "email": "Email:",
+        "emailPlaceholder": "Type email...",
+        "password": "Password:",
+        "passwordPlaceholder": "Type password...",
+        "wantSignIn": "Authorization",
+        "wantSignUp": "Registration",
+        "signInButton": "Sign In",
+        "signUpButton": "Sign Up"
+    },
+    "contact": {
+        "email": "Email:",
+        "send": "Send message",
+        "add": "Add to contacts"
+    },
+    "others": "Other users"
 }

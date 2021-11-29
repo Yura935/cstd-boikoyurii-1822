@@ -15,26 +15,29 @@
         <h2>{{ 'contacts' | translate }}</h2>
     </div>
     <div class="usersList-items">
-        <div class="usersList-items__block" *ngFor="let item of user.contacts| filter: search; let i=index">
-            <img class="usersList-items__block--left" [src]='item.image'>
-            <div class="usersList-items__block--right" [style.color]="textColor">
-                <div class="block-info">
-                    <h3>{{ item?.userName }}</h3>
-                    <p>{{ item?.date }}</p>
-                </div>
-                <div class="block-message">
-                    <p>{{ item?.lastMessage }}</p>
+        <div class="usersList-items__block" *ngIf="user.contacts.length > 0">
+            <div class="user" [id]="item.id" *ngFor="let item of user.contacts| filter: search; let i=index"
+                routerLinkActive="active" [routerLink]="item.userName" (click)="chooseContact($event)">
+                <img class="usersList-items__block--left" [src]='item.image'>
+                <div class="usersList-items__block--right" [style.color]="textColor">
+                    <div class="block-info">
+                        <h3>{{ item?.userName }}</h3>
+                        <p>{{ item?.date }}</p>
+                    </div>
+                    <div class="block-message">
+                        <p>{{ item?.lastMessage?.message }}</p>
+                    </div>
                 </div>
             </div>
         </div>
-        <div>
-            <div class="userList-all" *ngFor="let user of allUsers| filter: search;">
-                <div class="user">
-                    <img class="usersList-all--left" [src]='user.image'>
-                    <div class="usersList-all--right">
-                        <div class="block-info">
-                            <h3 [style.color]="textColor">{{user.userName}}</h3>
-                        </div>
+        <div class="userList-all">
+            <h2>{{ 'others' | translate }}</h2>
+            <div class="user" [id]="user.id" *ngFor="let user of allUsers| filter: search; let i=index"
+                routerLinkActive="active" [routerLink]="user.userName" (click)="chooseContact($event)">
+                <img class="usersList-all--left" [src]='user.image'>
+                <div class="usersList-all--right">
+                    <div class="block-info">
+                        <h3 [style.color]="textColor">{{user.userName}}</h3>
                     </div>
                 </div>
             </div>

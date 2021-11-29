@@ -1,14 +1,18 @@
-<section class="userInfo" [style.backgroundColor]="bgColorHead" (click)="openUserInfo()">
-    <div class="userInfo-image"></div>
-    <div class="userInfo-name" [style.color]='textColor'>
-        <h2>Josefina</h2>
+<section class="userInfo" [style.backgroundColor]="bgColorHead">
+    <div class="userInfo-image" [style.backgroundImage]="'url(' + currentContact?.image + ')'"></div>
+    <div class="userInfo-name" [style.color]='textColor' (click)="openUserInfo()">
+        <h2>{{ currentContact?.userName }}</h2>
+    </div>
+    <div *ngIf="!isContact" class="userInfo-add" (click)="addContact()" [style.color]="textColor">
+        <p>{{ 'contact.add' | translate }}</p>
     </div>
 </section>
 
 <section class="messanger" [style.backgroundColor]="bgColor">
     <div class="messanger-items">
         <div class="messanger-items__left">
-            <div class="messanger-items__left--image"></div>
+            <div class="messanger-items__left--image" [style.backgroundImage]="'url(' + currentContact?.image + ')'">
+            </div>
             <div class="messanger-items__left--message">
                 <div class="message-text">Quick come to the meeting room 1B, we have a big server issue</div>
                 <div class="message-date">4/22/17, 4:00 AM</div>
@@ -37,15 +41,15 @@
         </div>
         <div class="body">
             <div class="item image">
-                <img src="../../../assets/icons/user.svg" alt="image">
-                <h3>Josefina</h3>
+                <img [src]="currentContact?.image" alt="image">
+                <h3>{{ currentContact?.userName }}</h3>
             </div>
             <div class="item">
-                <h4>Email</h4>
-                <p>josefina@hmail.com</p>
+                <h4>{{ 'contact.email' | translate }}</h4>
+                <p>{{ currentContact?.email }}</p>
             </div>
             <div class="send" (click)="openUserInfo()">
-                <p>Send message</p>
+                <p>{{ 'contact.send' | translate }}</p>
             </div>
         </div>
     </div>

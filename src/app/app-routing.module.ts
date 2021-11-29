@@ -6,7 +6,11 @@ import { AuthComponent } from './login/auth/auth.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'main' },
-  { path: 'main', component: HomeComponent, canActivate: [UserGuard] },
+  {
+    path: 'main', component: HomeComponent, canActivate: [UserGuard], children: [
+      { path: ':username', component: HomeComponent },
+    ]
+  },
   { path: 'login', component: AuthComponent }
 ];
 

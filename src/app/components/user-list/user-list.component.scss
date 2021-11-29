@@ -64,6 +64,7 @@
   border-right: 1px solid lightgray;
   border-top: 0;
   transition: all 0.5s;
+  font-family: sans-serif;
 
   &-title {
     height: 40px;
@@ -121,14 +122,22 @@
     .userList-all {
       width: 100%;
       min-height: 60px;
-      border-bottom: 1px solid lightgray;
       padding-top: 2px;
+
+      h2 {
+        height: 40px;
+        line-height: 1.5;
+        color: darkturquoise;
+        padding-left: 10px;
+        position: relative;
+      }
 
       .user {
         width: 100%;
         display: flex;
         flex-direction: row;
         padding: 10px 5px;
+        border-bottom: 1px solid lightgray;
         cursor: pointer;
       }
 
@@ -143,6 +152,47 @@
       }
 
       .usersList-all--right {
+        width: 90%;
+        display: flex;
+        flex-direction: column;
+        margin-left: 10px;
+
+        .block-info {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+        }
+      }
+    }
+
+    .usersList-items__block {
+      width: 100%;
+      min-height: 60px;
+      padding: 2px 0px 0px;
+      margin-bottom: 5px;
+      display: flex;
+      flex-direction: column;
+
+      .user {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        padding: 10px 5px;
+        border-bottom: 1px solid lightgray;
+        cursor: pointer;
+      }
+
+      .user:hover {
+        background-color: rgba(168, 168, 168, 0.28);
+      }
+
+      img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+      }
+
+      &--right {
         width: 90%;
         display: flex;
         flex-direction: column;
@@ -305,7 +355,7 @@
     }
 
     .item:hover {
-      background-color: rgb(168, 168, 168, 0.28);
+      background-color: rgba(168, 168, 168, 0.28);
     }
 
     .langItems {
@@ -453,4 +503,12 @@
       background: linear-gradient(to right, #232526, #414345);
     }
   }
+}
+
+.none {
+  display: none;
+}
+
+.active {
+  background-color: rgba(168, 168, 168, 0.48);
 }
