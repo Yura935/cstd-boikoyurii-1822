@@ -10,7 +10,7 @@ export class FilterPipe implements PipeTransform {
       return [];
     }
     if (!field) {
-      return [];
+      return value;
     }
     return value.filter(item => item.userName.includes(field));
   }

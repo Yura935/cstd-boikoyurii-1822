@@ -33,7 +33,7 @@ describe('UserGuard', () => {
     expect(guard.checkLogin()).toBeTruthy();
   });
 
-  it('should check login', () => {
+  it('should check login if local storage is empty', () => {
     localStorage.clear();
     expect(guard.checkLogin()).toBeFalse();
   });

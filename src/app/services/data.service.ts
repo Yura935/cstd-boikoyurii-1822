@@ -3,6 +3,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { Contact } from '../classes/contact.model';
 import { IUserData } from '../interfaces/userData.interface';
 
 @Injectable({
@@ -17,6 +18,8 @@ export class DataService {
   public mainHeadColor = new Subject<string>();
   public mainTextColor = new Subject<string>();
   public currentElement = new Subject<string>();
+  public currentContact = new Subject<Contact>();
+  public adding = new Subject<boolean>();
 
   constructor(private db: AngularFirestore, private auth: AngularFireAuth, private router: Router) {
     this.userRef = this.db.collection(this.dbPath);
@@ -105,5 +108,13 @@ export class DataService {
 
   setCurrentElement(str: string) {
     this.currentElement.next(str);
+  }
+
+  setCurrentContact(contact: Contact) {
+    this.currentContact.next(contact);
+  }
+
+  setAdding(bool: boolean) {
+    this.adding.next(bool);
   }
 }

@@ -7,8 +7,8 @@ describe('FilterPipe', () => {
     expect(pipe).toBeTruthy();
   });
 
-  it('should return [] if field is not definend', () => {
-    expect(pipe.transform([{ userName: 'Bob' }, { userName: 'Roman' }, { userName: 'Zenyk' }], '')).toEqual([])
+  it('should return full array if field is not definend', () => {
+    expect(pipe.transform([{ userName: 'Bob' }, { userName: 'Roman' }, { userName: 'Zenyk' }], '')).toEqual([{ userName: 'Bob' }, { userName: 'Roman' }, { userName: 'Zenyk' }])
   })
 
   it('should return [] if value is not definend', () => {

@@ -1,8 +1,8 @@
 {
-    "sidebar":{
-        "settings":"Налаштування",
-        "lang":"Мова",
-        "fontSize":"Розмір шрифту",
+    "sidebar": {
+        "settings": "Налаштування",
+        "lang": "Мова",
+        "fontSize": "Розмір шрифту",
         "nightMode": "Темний режим"
     },
     "search-placeholder": "Знайти або почати новий чат...",
@@ -13,23 +13,29 @@
         "buttonUpload": "Завантажити картинку",
         "image": "Вибрати файл",
         "userName": "Ім'я користувача:",
-        "userNamePlaceholder":"Введіть ім'я користувача",
+        "userNamePlaceholder": "Введіть ім'я користувача",
         "email": "Електронна скринька:",
-        "emailPlaceholder":"Введіть електронну скриньку",
+        "emailPlaceholder": "Введіть електронну скриньку",
         "button": "Оновити дані"
     },
     "auth": {
-        "headSignIn":"Авторизація",
-        "headSignUp":"Реєстрація",
-        "userName":"Ім'я користувача:",
-        "userNamePlaceholder":"Введіть ім'я користувача",
-        "email":"Електронна скринька:",
-        "emailPlaceholder":"Введіть електронну скриньку",
-        "password":"Пароль:",
-        "passwordPlaceholder":"Введіть пароль",
-        "wantSignIn":"Авторизація",
-        "wantSignUp":"Реєстрація",
-        "signInButton":"Ввійти",
-        "signUpButton":"Зареєструватися"
-    }
+        "headSignIn": "Авторизація",
+        "headSignUp": "Реєстрація",
+        "userName": "Ім'я користувача:",
+        "userNamePlaceholder": "Введіть ім'я користувача",
+        "email": "Електронна скринька:",
+        "emailPlaceholder": "Введіть електронну скриньку",
+        "password": "Пароль:",
+        "passwordPlaceholder": "Введіть пароль",
+        "wantSignIn": "Авторизація",
+        "wantSignUp": "Реєстрація",
+        "signInButton": "Ввійти",
+        "signUpButton": "Зареєструватися"
+    },
+    "contact": {
+        "email": "Електронна скринька:",
+        "send": "Надіслати повідомлення",
+        "add": "Додати до контактів"
+    },
+    "others": "Інші користувачі"
 }
