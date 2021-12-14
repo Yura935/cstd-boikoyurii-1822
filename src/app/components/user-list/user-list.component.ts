@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from 'src/app/services/data.service';
-import { debounceTime, map } from 'rxjs/operators';
+import { debounceTime, distinct, distinctUntilChanged, map } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { IUserData } from 'src/app/interfaces/userData.interface';
 import { Contact } from 'src/app/classes/contact.model';
@@ -35,6 +35,8 @@ export class UserListComponent implements OnInit {
   constructor(private dataService: DataService, private translate: TranslateService, private router: Router) { }
 
   ngOnInit(): void {
+    console.log(1);
+    
     this.getUserData();
     this.dataService.mainColor.subscribe(data => this.bgColor = data);
     this.dataService.mainHeadColor.subscribe(data => this.bgColorHead = data);
@@ -43,7 +45,7 @@ export class UserListComponent implements OnInit {
     this.getAllUsers();
     this.dataService.adding.subscribe(() => {
       this.getUserData();
-      this.getAllUsers();
+      // this.getAllUsers();
     });
   }
 
@@ -132,8 +134,8 @@ export class UserListComponent implements OnInit {
             userName: newContact.userName,
             image: newContact.image,
             email: newContact.email,
-            messages: newContact.messages,
-            lastMessage: newContact.lastMessage,
+            messages: newContact.messages || [],
+            lastMessage: newContact.lastMessage || null,
             isContact: newContact.isContact,
             id: newContact.id
           }
@@ -145,8 +147,8 @@ export class UserListComponent implements OnInit {
               userName: this.currentContact.userName,
               image: this.currentContact.image,
               email: this.currentContact.email,
-              messages: this.currentContact.messages,
-              lastMessage: this.currentContact.lastMessage,
+              messages: this.currentContact.messages || [],
+              lastMessage: this.currentContact.lastMessage || null,
               isContact: this.currentContact.isContact || false,
               id: this.currentContact.id
             }
@@ -207,8 +209,8 @@ export class UserListComponent implements OnInit {
       userName: this.currentContact.userName,
       image: this.currentContact.image,
       email: this.currentContact.email,
-      messages: this.currentContact.messages,
-      lastMessage: this.currentContact.lastMessage,
+      messages: this.currentContact.messages || [],
+      lastMessage: this.currentContact.lastMessage || null,
       isContact: this.currentContact.isContact,
       id: this.currentContact.id
     }

@@ -25,6 +25,10 @@ export class DataService {
     this.userRef = this.db.collection(this.dbPath);
   }
 
+  getS() {
+    return this.db.collection('/users').valueChanges();
+  }
+
   signUp(formGroup): void {
     this.auth.createUserWithEmailAndPassword(formGroup.email, formGroup.password).then(response => {
       const user = {

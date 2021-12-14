@@ -9,19 +9,21 @@
 </section>
 
 <section class="messanger" [style.backgroundColor]="bgColor">
-    <div class="messanger-items">
-        <div class="messanger-items__left">
+    <div class="messanger-items" *ngFor="let message of messages">
+        <div *ngIf="message.userId !== user.id" class="messanger-items__left">
             <div class="messanger-items__left--image" [style.backgroundImage]="'url(' + currentContact?.image + ')'">
             </div>
             <div class="messanger-items__left--message">
-                <div class="message-text">Quick come to the meeting room 1B, we have a big server issue</div>
-                <div class="message-date">4/22/17, 4:00 AM</div>
+                <div class="message-text">{{ message.message }}</div>
+                <div class="message-date">{{ message.date | date: 'dd/MM/YY, hh:mm a' }}</div>
             </div>
         </div>
-        <div class="messanger-items__right">
+    </div>
+    <div class="messanger-items" *ngFor="let message of messages">
+        <div *ngIf="message.userId === user.id" class="messanger-items__right">
             <div class="messanger-items__right--message">
-                <div class="message-text">I'm having breakfast right now, can't you wait for 10 minutes?</div>
-                <div class="message-date">4/22/17, 4:05 AM</div>
+                <div class="message-text">{{ message.message }}</div>
+                <div class="message-date">{{ message.date | date: 'dd/MM/YY, hh:mm a' }}</div>
             </div>
         </div>
     </div>
@@ -29,8 +31,8 @@
 
 <section class="blockSending" [style.backgroundColor]="bgColor">
     <div class="blockSending-inner">
-        <input type="text" placeholder="{{ 'text-placeholder' | translate }}">
-        <div class="send-icon"></div>
+        <input type="text" name="message" placeholder="{{ 'text-placeholder' | translate }}" [(ngModel)]="message">
+        <div class="send-icon" (click)="sendMessage()"></div>
     </div>
 </section>
 

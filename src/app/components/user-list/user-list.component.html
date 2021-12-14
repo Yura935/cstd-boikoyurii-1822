@@ -22,10 +22,9 @@
                 <div class="usersList-items__block--right" [style.color]="textColor">
                     <div class="block-info">
                         <h3>{{ item?.userName }}</h3>
-                        <p>{{ item?.date }}</p>
                     </div>
-                    <div class="block-message">
-                        <p>{{ item?.lastMessage?.message }}</p>
+                    <div class="block-message" *ngIf="item.lastMessage">
+                        <p>{{ item.lastMessage.message }}</p>
                     </div>
                 </div>
             </div>
