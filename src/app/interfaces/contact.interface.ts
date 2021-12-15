@@ -8,4 +8,5 @@ export interface IContact {
     lastMessage: IMessage;
     isContact: boolean;
     id?: string;
+    contacts?: Array<IContact>;
 }

@@ -2,8 +2,8 @@ import { IMessage } from "../interfaces/message.interface";
 
 export class Message implements IMessage {
     constructor(
-        public id: number | string,
-        public userName: string,
+        public id: number,
+        public userId: string,
         public message: string,
         public date: Date
     ) { }

@@ -6,9 +6,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthComponent } from './login/auth/auth.component';
-import { UserListComponent } from './components/user-list/user-list.component';
 import { HomeComponent } from './components/home/home.component';
-import { UserMessangerComponent } from './components/user-messanger/user-messanger.component';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -30,9 +28,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   declarations: [
     AppComponent,
     AuthComponent,
-    UserListComponent,
     HomeComponent,
-    UserMessangerComponent,
     FilterPipe,
   ],
   imports: [
