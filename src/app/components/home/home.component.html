@@ -1,4 +1,197 @@
 <main>
-    <app-user-list></app-user-list>
-    <app-user-messanger></app-user-messanger>
+    <section class="menu">
+        <div class="menu-inner" [style.backgroundColor]="bgColorHead">
+            <div class="menu-burger" (click)="openSideBar()">
+                <div class="burger" [style.backgroundColor]="textColor"></div>
+                <div class="burger" [style.backgroundColor]="textColor"></div>
+                <div class="burger" [style.backgroundColor]="textColor"></div>
+            </div>
+            <div class="menu-search">
+                <input type="text" name="search" [(ngModel)]="search" class="search"
+                    placeholder="{{ 'search-placeholder' | translate }}">
+            </div>
+        </div>
+
+        <div class="usersList" [style.backgroundColor]="bgColor">
+            <div class="usersList-title">
+                <h2>{{ 'contacts' | translate }}</h2>
+            </div>
+            <div class="usersList-items">
+                <div class="usersList-items__block" *ngIf="user.contacts.length > 0">
+                    <div class="user" [id]="item.id" *ngFor="let item of user.contacts| filter: search; let i=index"
+                        routerLinkActive="active" [routerLink]="item.userName" (click)="chooseContact($event)">
+                        <img class="usersList-items__block--left" [src]='item.image'>
+                        <div class="usersList-items__block--right" [style.color]="textColor">
+                            <div class="block-info">
+                                <h3>{{ item?.userName }}</h3>
+                            </div>
+                            <div class="block-message" *ngIf="item.lastMessage">
+                                <p>{{ item.lastMessage.message }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="userList-all">
+                    <h2>{{ 'others' | translate }}</h2>
+                    <div class="user" [id]="user.id" *ngFor="let user of allUsers| filter: search; let i=index"
+                        routerLinkActive="active" [routerLink]="user.userName" (click)="chooseContact($event)">
+                        <img class="usersList-all--left" [src]='user.image'>
+                        <div class="usersList-all--right">
+                            <div class="block-info">
+                                <h3 [style.color]="textColor">{{user.userName}}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <section class="sidebar" [ngStyle]="{'left': left}" [style.backgroundColor]="bgColor">
+        <div class="sidebar-head" [style.backgroundColor]="bgColorHead" [style.color]="textColor">
+            <div class="head-close" (click)="closeSideBar()" [style.color]="textColor">
+                < </div>
+                    <div class="head-image">
+                        <img class="head-image__box" [src]="user?.image">
+                    </div>
+                    <div class="head-nick">{{ user?.userName }}</div>
+                    <div class="edit-block" (click)="openEditModal()">
+                        <img class="edit" src="assets/icons/edit.svg" alt="edit">
+                    </div>
+                    <div class="head-signOut">
+                        <div class="signOut" (click)="signOut()"></div>
+                    </div>
+            </div>
+            <div class="sidebar-items" [style.color]="isDark ? '#fff' : '#000'">
+                <div class="item">
+                    <img class="item-img" src="assets/icons/settings.svg">
+                    <div class="item-title">{{ 'sidebar.settings' | translate }}</div>
+                </div>
+                <div class="item" (click)="openLangModal()">
+                    <img class="item-img" src="assets/icons/language.svg">
+                    <div class="item-title">{{ 'sidebar.lang' | translate }}</div>
+                </div>
+                <div class="item">
+                    <img class="item-img" src="assets/icons/eye.svg">
+                    <div class="item-title">{{ 'sidebar.fontSize' | translate }}</div>
+                </div>
+                <div class="item" (click)="toggleView()">
+                    <div class="item-img">
+                        <div class="switch">
+                            <div [style.right]="isDark ? '6px' : '20px'" class="switch-check"></div>
+                        </div>
+                    </div>
+                    <div class="item-title">{{ 'sidebar.nightMode' | translate }}</div>
+                </div>
+                <div *ngIf="changeLang" class="langItems" [style.backgroundColor]="bgColorHead"
+                    [style.color]='textColor'>
+                    <div class="item">
+                        <input type="radio" name="lang" id="en" [checked]="lang === 'en'" (click)="translate.use('en')"
+                            (click)="changeLanguage($event.target)">
+                        <label for="en">EN</label>
+                    </div>
+                    <div class="item">
+                        <input type="radio" name="lang" id="ua" [checked]="lang === 'ua'" (click)="translate.use('ua')"
+                            (click)="changeLanguage($event.target)">
+                        <label for="ua">UA</label>
+                    </div>
+                </div>
+            </div>
+    </section>
+
+    <section class="editData" [style.display]="display" [style.backgroundColor]="bgColorHead" [style.color]="textColor">
+        <div class="head">
+            <h1>{{ 'editData.head' | translate }}</h1>
+            <div class="close" (click)="openEditModal()" [style.backgroundImage]="currentElement"></div>
+        </div>
+        <div class="body">
+            <div class="item image">
+                <img [src]="image" alt="image">
+                <div class="upload-btn-wrapper">
+                    <button class="btn">{{ 'editData.buttonUpload' | translate }}</button>
+                    <input type="file" name="image" id="image" (change)="readFile($event.target)">
+                </div>
+            </div>
+            <div class="item">
+                <label for="userName">{{ 'editData.userName' | translate }}</label>
+                <input [(ngModel)]="userName" type="text" name="userName" id="userName"
+                    placeholder="{{ 'editData.userNamePlaceholder' | translate }}">
+            </div>
+            <div class="item">
+                <label for="email">{{ 'editData.email' | translate }}</label>
+                <input [(ngModel)]="email" type="email" name="Email" id="email"
+                    placeholder="{{ 'editData.emailPlaceholder' | translate }}">
+            </div>
+        </div>
+        <div class="button">
+            <input type="button" value="{{ 'editData.button' | translate }}" (click)="updateUserData()">
+        </div>
+    </section>
+
+    <section class="userInfo">
+        <div class="userInfo-inner" [style.backgroundColor]="bgColorHead">
+            <div class="userInfo-image" [style.backgroundImage]="'url(' + currentContact?.image + ')'"></div>
+            <div class="userInfo-name" [style.color]='textColor' (click)="openUserInfo()">
+                <h2>{{ currentContact?.userName }}</h2>
+            </div>
+            <div *ngIf="!isContact" class="userInfo-add" (click)="addContact()" [style.color]="textColor">
+                <p>{{ 'contact.add' | translate }}</p>
+            </div>
+        </div>
+        <div class="messanger" [style.backgroundColor]="bgColor">
+            <div class="messanger-items" *ngFor="let message of messages">
+                <div *ngIf="message.userId !== user.id" class="messanger-items__left">
+                    <div class="messanger-items__left--message">
+                        <div class="message-text">{{ message.message }}</div>
+                        <div name="isString" *ngIf="isString" class="message-date">{{ message.date | date: 'dd/MM/YY,
+                            hh:mm a' }}</div>
+                        <div name="!isString" *ngIf="!isString" class="message-date">{{ message.date.seconds*1000 |
+                            date: 'dd/MM/YY,
+                            hh:mm a' }}</div>
+                    </div>
+                </div>
+                <div *ngIf="message.userId === user.id" class="messanger-items__right">
+                    <div class="messanger-items__right--message">
+                        <div class="message-text">{{ message.message }}</div>
+                        <div name="isString" *ngIf="isString" class="message-date">{{ message.date | date: 'dd/MM/YY,
+                            hh:mm a' }}</div>
+                        <div name="!isString" *ngIf="!isString" class="message-date">{{ message.date.seconds*1000 |
+                            date: 'dd/MM/YY,
+                            hh:mm a' }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="blockSending" [style.backgroundColor]="bgColor">
+            <div class="blockSending-inner">
+                <input type="text" name="message" placeholder="{{ 'text-placeholder' | translate }}"
+                    [(ngModel)]="message">
+                <div class="send-icon" (click)="sendMessage()"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contactInfo" [style.display]="isClick">
+        <div class="contactInfo-inner" [style.backgroundColor]="bgColorHead" [style.color]='textColor'>
+            <div class="head">
+                <div class="close" [style.backgroundImage]="currentElement" (click)="openUserInfo()"></div>
+            </div>
+            <div class="body">
+                <div class="item image">
+                    <img [src]="currentContact?.image" alt="image">
+                    <h3>{{ currentContact?.userName }}</h3>
+                </div>
+                <div class="item">
+                    <h4>{{ 'contact.email' | translate }}</h4>
+                    <p>{{ currentContact?.email }}</p>
+                </div>
+                <div class="send" (click)="openUserInfo()">
+                    <p>{{ 'contact.send' | translate }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
 </main>
