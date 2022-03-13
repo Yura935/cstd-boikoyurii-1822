@@ -19,6 +19,11 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgClickOutsideModule } from 'ng-click-outside2';
+import { DeleteModalComponent } from './components/delete-modal/delete-modal.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { ClearHistoryModalComponent } from './components/clear-history-modal/clear-history-modal.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json?cb=" + new Date().getTime());
@@ -30,6 +35,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     AuthComponent,
     HomeComponent,
     FilterPipe,
+    DeleteModalComponent,
+    ClearHistoryModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -49,7 +56,10 @@ export function HttpLoaderFactory(http: HttpClient) {
       },
       defaultLanguage: "en"
     }),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    NgClickOutsideModule,
+    MatDialogModule,
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -5,7 +5,7 @@
         "fontSize": "Font Size",
         "nightMode": "Night Mode"
     },
-    "search-placeholder": "Search or start new chat...",
+    "search-placeholder": "Search chat...",
     "contacts": "Chats",
     "text-placeholder": "Type your message...",
     "editData": {
@@ -35,7 +35,25 @@
     "contact": {
         "email": "Email:",
         "send": "Send message",
-        "add": "Add to contacts"
+        "add": "Add to contacts",
+        "clear": "Clear message history"
     },
-    "others": "Other users"
+    "others": "Other users",
+    "settings": {
+        "translate": "Translate",
+        "edit": "Edit",
+        "delete": "Delete"
+    },
+    "deleteModal": {
+        "title": "Do you want to delete this message?",
+        "check": "Also delete for {{currentUserName}}",
+        "delete": "Delete",
+        "cancel": "Cancel"
+    },
+    "clearHistory": {
+        "title": "Do you want to clear message history?",
+        "check": "Also clear for {{currentUserName}}",
+        "clear": "Clear",
+        "cancel": "Cancel"
+    }
 }
