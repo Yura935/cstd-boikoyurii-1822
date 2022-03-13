@@ -1,0 +1,32 @@
+::ng-deep .clearHistory-matDialog-styles {
+  .mat-dialog-container {
+    margin: auto !important;
+
+    .check {
+      margin: 5px 5px 15px;
+
+      input {
+        outline: none;
+      }
+
+      label {
+        margin-left: 5px;
+      }
+    }
+
+    .block {
+      display: flex;
+      justify-content: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    .box {
+      width: 250px;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+}

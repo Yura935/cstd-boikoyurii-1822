@@ -5,6 +5,7 @@ export class Message implements IMessage {
         public id: number,
         public userId: string,
         public message: string,
-        public date: Date
+        public date: Date,
+        public edited: boolean
     ) { }
 }

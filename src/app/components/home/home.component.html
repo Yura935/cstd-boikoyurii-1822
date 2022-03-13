@@ -48,8 +48,6 @@
         </div>
     </section>
 
-
-
     <section class="sidebar" [ngStyle]="{'left': left}" [style.backgroundColor]="bgColor">
         <div class="sidebar-head" [style.backgroundColor]="bgColorHead" [style.color]="textColor">
             <div class="head-close" (click)="closeSideBar()" [style.color]="textColor">
@@ -145,7 +143,21 @@
             <div class="messanger-items" *ngFor="let message of messages">
                 <div *ngIf="message.userId !== user.id" class="messanger-items__left">
                     <div class="messanger-items__left--message">
-                        <div class="message-text">{{ message.message }}</div>
+                        <div class="message" id="message{{message.id}}">
+                            <div class="message-text" id="mes{{message.id}}">{{ message.message }}</div>
+                            <div class="dots" id="dot{{message.id}}" (click)="openMessageSettings(message.id)"
+                                (clickOutside)="onClickedOutside($event)"></div>
+                            <div class="hidden">
+                                <div class="settings" id="m{{message.id}}">
+                                    <div class="point" (click)="translateMessage(message.message, message.id)">{{
+                                        'settings.translate' | translate }}
+                                        <div class="check" id="ch{{message.id}}"></div>
+                                    </div>
+                                    <div class="point" (click)="openDialog(message)">{{ 'settings.delete' | translate }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div name="isString" *ngIf="isString" class="message-date">{{ message.date | date: 'dd/MM/YY,
                             hh:mm a' }}</div>
                         <div name="!isString" *ngIf="!isString" class="message-date">{{ message.date.seconds*1000 |
@@ -155,7 +167,24 @@
                 </div>
                 <div *ngIf="message.userId === user.id" class="messanger-items__right">
                     <div class="messanger-items__right--message">
-                        <div class="message-text">{{ message.message }}</div>
+                        <div class="message">
+                            <div class="hidden">
+                                <div class="settings" id="m{{message.id}}">
+                                    <div class="point" (click)="translateMessage(message.message, message.id)">{{
+                                        'settings.translate' | translate }}
+                                        <div class="check" id="ch{{message.id}}"></div>
+                                    </div>
+                                    <div class="point" (click)="editMessage(message)">{{ 'settings.edit' | translate }}
+                                    </div>
+                                    <div class="point" (click)="openDialog(message)">{{ 'settings.delete' | translate }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="dots" id="dot{{message.id}}" (click)="openMessageSettings(message.id)"
+                                (clickOutside)="onClickedOutside($event)"></div>
+                            <div class="message-text" id="mes{{message.id}}">{{ message.message }}</div>
+                            <div class="editted" *ngIf="message.edited"></div>
+                        </div>
                         <div name="isString" *ngIf="isString" class="message-date">{{ message.date | date: 'dd/MM/YY,
                             hh:mm a' }}</div>
                         <div name="!isString" *ngIf="!isString" class="message-date">{{ message.date.seconds*1000 |
@@ -166,9 +195,18 @@
             </div>
         </div>
         <div class="blockSending" [style.backgroundColor]="bgColor">
+            <div *ngIf="editMess" class="edit" >
+                <div class="icon"></div>
+                <div class="text">
+                    <p>Edit message!</p>
+                </div>
+                <div class="close" (click)="cancelEdit()"></div>
+            </div>
             <div class="blockSending-inner">
-                <input type="text" name="message" placeholder="{{ 'text-placeholder' | translate }}"
-                    [(ngModel)]="message">
+                <div class="document" (click)="uploadFile()"></div>
+                <div class="file"></div>
+                <input type="text" id="message" name="message" placeholder="{{ 'text-placeholder' | translate }}"
+                    [(ngModel)]="message" (keyup.enter)="sendMessage()">
                 <div class="send-icon" (click)="sendMessage()"></div>
             </div>
         </div>
@@ -180,16 +218,22 @@
                 <div class="close" [style.backgroundImage]="currentElement" (click)="openUserInfo()"></div>
             </div>
             <div class="body">
-                <div class="item image">
+                <div class="info image">
                     <img [src]="currentContact?.image" alt="image">
                     <h3>{{ currentContact?.userName }}</h3>
                 </div>
-                <div class="item">
+                <div class="info">
                     <h4>{{ 'contact.email' | translate }}</h4>
                     <p>{{ currentContact?.email }}</p>
                 </div>
-                <div class="send" (click)="openUserInfo()">
+                <div class="send item" (click)="openUserInfo()">
                     <p>{{ 'contact.send' | translate }}</p>
+                </div>
+                <div class="clear item" (click)="clearHistory()">
+                    <div class="clear-icon"
+                        [style.backgroundImage]="isDark ? 'url(../../../assets/icons/bin-white.svg)' : 'url(../../../assets/icons/bin.svg)'">
+                    </div>
+                    <p>{{ 'contact.clear' | translate }}</p>
                 </div>
             </div>
         </div>

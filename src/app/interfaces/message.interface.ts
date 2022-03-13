@@ -3,4 +3,5 @@ export interface IMessage {
     userId: string;
     message: string;
     date: Date;
+    edited: boolean;
 }

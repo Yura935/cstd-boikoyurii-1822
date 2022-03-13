@@ -1,0 +1,11 @@
+<h2>{{ 'clearHistory.title' | translate }}</h2>
+<div class="check">
+    <input type="checkbox" name="check" id="check" [checked]="isCheck" (click)="toggleCheck()">
+    <label for="check">{{ 'clearHistory.check' | translate: {currentUserName: currentUserName} }}</label>
+</div>
+<div class="block">
+    <div class="box">
+        <button mat-raised-button color="warn" (click)="onNoClick()">{{ 'clearHistory.cancel' | translate }}</button>
+        <button mat-raised-button color="primary" (click)="clear()">{{ 'clearHistory.clear' | translate }}</button>
+    </div>
+</div>
