@@ -8,42 +8,45 @@
             </div>
             <div class="menu-search">
                 <input type="text" name="search" [(ngModel)]="search" class="search"
-                    placeholder="{{ 'search-placeholder' | translate }}">
+                    placeholder="{{ 'search-placeholder' | translate }}" [style.fontSize]="currentSize.text">
             </div>
         </div>
 
         <div class="usersList" [style.backgroundColor]="bgColor">
             <div class="usersList-title">
-                <h2>{{ 'contacts' | translate }}</h2>
+                <h2 [style.fontSize]="currentSize.title">{{ 'contacts' | translate }}</h2>
             </div>
-            <div class="usersList-items">
+            <div *ngIf="checkFilter()" class="usersList-items">
                 <div class="usersList-items__block" *ngIf="user.contacts.length > 0">
                     <div class="user" [id]="item.id" *ngFor="let item of user.contacts| filter: search; let i=index"
                         routerLinkActive="active" [routerLink]="item.userName" (click)="chooseContact($event)">
                         <img class="usersList-items__block--left" [src]='item.image'>
                         <div class="usersList-items__block--right" [style.color]="textColor">
                             <div class="block-info">
-                                <h3>{{ item?.userName }}</h3>
+                                <h3 [style.fontSize]="currentSize.title">{{ item?.userName }}</h3>
                             </div>
                             <div class="block-message" *ngIf="item.lastMessage">
-                                <p>{{ item.lastMessage.message }}</p>
+                                <p [style.color]="isDark ? 'darkgray' : 'gray'" [style.fontSize]="currentSize.text">{{ item.lastMessage.message }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="userList-all">
-                    <h2>{{ 'others' | translate }}</h2>
-                    <div class="user" [id]="user.id" *ngFor="let user of allUsers| filter: search; let i=index"
-                        routerLinkActive="active" [routerLink]="user.userName" (click)="chooseContact($event)">
-                        <img class="usersList-all--left" [src]='user.image'>
-                        <div class="usersList-all--right">
-                            <div class="block-info">
-                                <h3 [style.color]="textColor">{{user.userName}}</h3>
-                            </div>
+            </div>
+            <div *ngIf="checkFilter()" class="userList-all">
+                <h2 [style.fontSize]="currentSize.title">{{ 'others' | translate }}</h2>
+                <div class="user" [id]="user.id" *ngFor="let user of allUsers| filter: search; let i=index"
+                    routerLinkActive="active" [routerLink]="user.userName" (click)="chooseContact($event)">
+                    <img class="usersList-all--left" [src]='user.image'>
+                    <div class="usersList-all--right">
+                        <div class="block-info">
+                            <h3 [style.color]="textColor" [style.fontSize]="currentSize.title">{{user.userName}}</h3>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div *ngIf="!checkFilter()" class="usersList-items-none">
+                <p id="notFound" [style.color]="isDark ? 'darkgray' : 'gray'" [style.fontSize]="currentSize.text">{{ 'usersNotFound' | translate: {name:
+                    search} }}</p>
             </div>
         </div>
     </section>
@@ -55,7 +58,7 @@
                     <div class="head-image">
                         <img class="head-image__box" [src]="user?.image">
                     </div>
-                    <div class="head-nick">{{ user?.userName }}</div>
+                    <div class="head-nick" [style.fontSize]="currentSize.title">{{ user?.userName }}</div>
                     <div class="edit-block" (click)="openEditModal()">
                         <img class="edit" src="assets/icons/edit.svg" alt="edit">
                     </div>
@@ -64,17 +67,9 @@
                     </div>
             </div>
             <div class="sidebar-items" [style.color]="isDark ? '#fff' : '#000'">
-                <div class="item">
+                <div class="item" (click)="openSettings()">
                     <img class="item-img" src="assets/icons/settings.svg">
-                    <div class="item-title">{{ 'sidebar.settings' | translate }}</div>
-                </div>
-                <div class="item" (click)="openLangModal()">
-                    <img class="item-img" src="assets/icons/language.svg">
-                    <div class="item-title">{{ 'sidebar.lang' | translate }}</div>
-                </div>
-                <div class="item">
-                    <img class="item-img" src="assets/icons/eye.svg">
-                    <div class="item-title">{{ 'sidebar.fontSize' | translate }}</div>
+                    <div class="item-title" [style.fontSize]="currentSize.title">{{ 'sidebar.settings' | translate }}</div>
                 </div>
                 <div class="item" (click)="toggleView()">
                     <div class="item-img">
@@ -82,50 +77,40 @@
                             <div [style.right]="isDark ? '6px' : '20px'" class="switch-check"></div>
                         </div>
                     </div>
-                    <div class="item-title">{{ 'sidebar.nightMode' | translate }}</div>
+                    <div class="item-title" [style.fontSize]="currentSize.title">{{ 'sidebar.nightMode' | translate }}</div>
                 </div>
-                <div *ngIf="changeLang" class="langItems" [style.backgroundColor]="bgColorHead"
-                    [style.color]='textColor'>
-                    <div class="item">
-                        <input type="radio" name="lang" id="en" [checked]="lang === 'en'" (click)="translate.use('en')"
-                            (click)="changeLanguage($event.target)">
-                        <label for="en">EN</label>
-                    </div>
-                    <div class="item">
-                        <input type="radio" name="lang" id="ua" [checked]="lang === 'ua'" (click)="translate.use('ua')"
-                            (click)="changeLanguage($event.target)">
-                        <label for="ua">UA</label>
-                    </div>
-                </div>
+
             </div>
     </section>
 
-    <section class="editData" [style.display]="display" [style.backgroundColor]="bgColorHead" [style.color]="textColor">
-        <div class="head">
-            <h1>{{ 'editData.head' | translate }}</h1>
-            <div class="close" (click)="openEditModal()" [style.backgroundImage]="currentElement"></div>
-        </div>
-        <div class="body">
-            <div class="item image">
-                <img [src]="image" alt="image">
-                <div class="upload-btn-wrapper">
-                    <button class="btn">{{ 'editData.buttonUpload' | translate }}</button>
-                    <input type="file" name="image" id="image" (change)="readFile($event.target)">
+    <section class="editData" [style.display]="display">
+        <div class="editData-inner" [style.backgroundColor]="bgColorHead" [style.color]="textColor">
+            <div class="head">
+                <h1 [style.fontSize]="currentSize.title">{{ 'editData.head' | translate }}</h1>
+                <div class="close" (click)="openEditModal()" [style.backgroundImage]="currentElement"></div>
+            </div>
+            <div class="body">
+                <div class="item image">
+                    <img [src]="image" alt="image">
+                    <div class="upload-btn-wrapper">
+                        <button class="btn" [style.fontSize]="currentSize.text">{{ 'editData.buttonUpload' | translate }}</button>
+                        <input type="file" name="image" id="image" (change)="uploadImage($event)">
+                    </div>
+                </div>
+                <div class="item">
+                    <label for="userName" [style.fontSize]="currentSize.text">{{ 'editData.userName' | translate }}</label>
+                    <input [(ngModel)]="userName" type="text" name="userName" id="userName" [style.fontSize]="currentSize.text"
+                        placeholder="{{ 'editData.userNamePlaceholder' | translate }}">
+                </div>
+                <div class="item">
+                    <label for="email" [style.fontSize]="currentSize.text">{{ 'editData.email' | translate }}</label>
+                    <input [(ngModel)]="email" type="email" name="Email" id="email" [style.fontSize]="currentSize.text"
+                        placeholder="{{ 'editData.emailPlaceholder' | translate }}">
                 </div>
             </div>
-            <div class="item">
-                <label for="userName">{{ 'editData.userName' | translate }}</label>
-                <input [(ngModel)]="userName" type="text" name="userName" id="userName"
-                    placeholder="{{ 'editData.userNamePlaceholder' | translate }}">
+            <div class="button">
+                <input type="button" value="{{ 'editData.button' | translate }}" [style.fontSize]="currentSize.text" (click)="updateUserData()">
             </div>
-            <div class="item">
-                <label for="email">{{ 'editData.email' | translate }}</label>
-                <input [(ngModel)]="email" type="email" name="Email" id="email"
-                    placeholder="{{ 'editData.emailPlaceholder' | translate }}">
-            </div>
-        </div>
-        <div class="button">
-            <input type="button" value="{{ 'editData.button' | translate }}" (click)="updateUserData()">
         </div>
     </section>
 
@@ -133,34 +118,34 @@
         <div class="userInfo-inner" [style.backgroundColor]="bgColorHead">
             <div class="userInfo-image" [style.backgroundImage]="'url(' + currentContact?.image + ')'"></div>
             <div class="userInfo-name" [style.color]='textColor' (click)="openUserInfo()">
-                <h2>{{ currentContact?.userName }}</h2>
+                <h2 [style.fontSize]="currentSize.title">{{ currentContact?.userName }}</h2>
             </div>
             <div *ngIf="!isContact" class="userInfo-add" (click)="addContact()" [style.color]="textColor">
-                <p>{{ 'contact.add' | translate }}</p>
+                <p [style.fontSize]="currentSize.text">{{ 'contact.add' | translate }}</p>
             </div>
         </div>
-        <div class="messanger" [style.backgroundColor]="bgColor">
+        <div class="messanger" [style.backgroundImage]="'url('+ backgroundImage + ')'">
             <div class="messanger-items" *ngFor="let message of messages">
                 <div *ngIf="message.userId !== user.id" class="messanger-items__left">
                     <div class="messanger-items__left--message">
                         <div class="message" id="message{{message.id}}">
-                            <div class="message-text" id="mes{{message.id}}">{{ message.message }}</div>
+                            <div class="message-text" id="mes{{message.id}}" [style.fontSize]="currentSize.title" [style.fontSize]="currentSize.title">{{ message.message }}</div>
                             <div class="dots" id="dot{{message.id}}" (click)="openMessageSettings(message.id)"
                                 (clickOutside)="onClickedOutside($event)"></div>
-                            <div class="hidden">
+                            <div class="hidden-block">
                                 <div class="settings" id="m{{message.id}}">
-                                    <div class="point" (click)="translateMessage(message.message, message.id)">{{
+                                    <div class="point" (click)="translateMessage(message.message, message.id)" [style.fontSize]="currentSize.text">{{
                                         'settings.translate' | translate }}
                                         <div class="check" id="ch{{message.id}}"></div>
                                     </div>
-                                    <div class="point" (click)="openDialog(message)">{{ 'settings.delete' | translate }}
+                                    <div class="point" (click)="openDialog(message)" [style.fontSize]="currentSize.text">{{ 'settings.delete' | translate }}
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div name="isString" *ngIf="isString" class="message-date">{{ message.date | date: 'dd/MM/YY,
+                        <div name="date" *ngIf="isString" class="message-date" [style.fontSize]="currentSize.text">{{ message.date | date: 'dd/MM/YY,
                             hh:mm a' }}</div>
-                        <div name="!isString" *ngIf="!isString" class="message-date">{{ message.date.seconds*1000 |
+                        <div name="date" *ngIf="!isString" class="message-date" [style.fontSize]="currentSize.text">{{ message.date.seconds*1000 |
                             date: 'dd/MM/YY,
                             hh:mm a' }}</div>
                     </div>
@@ -168,26 +153,26 @@
                 <div *ngIf="message.userId === user.id" class="messanger-items__right">
                     <div class="messanger-items__right--message">
                         <div class="message">
-                            <div class="hidden">
+                            <div class="hidden-block">
                                 <div class="settings" id="m{{message.id}}">
-                                    <div class="point" (click)="translateMessage(message.message, message.id)">{{
+                                    <div class="point" (click)="translateMessage(message.message, message.id)" [style.fontSize]="currentSize.text">{{
                                         'settings.translate' | translate }}
                                         <div class="check" id="ch{{message.id}}"></div>
                                     </div>
-                                    <div class="point" (click)="editMessage(message)">{{ 'settings.edit' | translate }}
+                                    <div class="point" (click)="editMessage(message)" [style.fontSize]="currentSize.text">{{ 'settings.edit' | translate }}
                                     </div>
-                                    <div class="point" (click)="openDialog(message)">{{ 'settings.delete' | translate }}
+                                    <div class="point" (click)="openDialog(message)" [style.fontSize]="currentSize.text">{{ 'settings.delete' | translate }}
                                     </div>
                                 </div>
                             </div>
                             <div class="dots" id="dot{{message.id}}" (click)="openMessageSettings(message.id)"
                                 (clickOutside)="onClickedOutside($event)"></div>
-                            <div class="message-text" id="mes{{message.id}}">{{ message.message }}</div>
+                            <div class="message-text" id="mes{{message.id}}" [style.fontSize]="currentSize.title">{{ message.message }}</div>
                             <div class="editted" *ngIf="message.edited"></div>
                         </div>
-                        <div name="isString" *ngIf="isString" class="message-date">{{ message.date | date: 'dd/MM/YY,
+                        <div name="isString" *ngIf="isString" class="message-date" [style.fontSize]="currentSize.text">{{ message.date | date: 'dd/MM/YY,
                             hh:mm a' }}</div>
-                        <div name="!isString" *ngIf="!isString" class="message-date">{{ message.date.seconds*1000 |
+                        <div name="!isString" *ngIf="!isString" class="message-date" [style.fontSize]="currentSize.text">{{ message.date.seconds*1000 |
                             date: 'dd/MM/YY,
                             hh:mm a' }}</div>
                     </div>
@@ -195,17 +180,18 @@
             </div>
         </div>
         <div class="blockSending" [style.backgroundColor]="bgColor">
-            <div *ngIf="editMess" class="edit" >
+            <div *ngIf="editMess" class="edit">
                 <div class="icon"></div>
                 <div class="text">
-                    <p>Edit message!</p>
+                    <p [style.fontSize]="currentSize.text">{{ 'blockSending.warn' | translate }}</p>
                 </div>
                 <div class="close" (click)="cancelEdit()"></div>
             </div>
             <div class="blockSending-inner">
-                <div class="document" (click)="uploadFile()"></div>
-                <div class="file"></div>
-                <input type="text" id="message" name="message" placeholder="{{ 'text-placeholder' | translate }}"
+                <input type="file" name="file" id="file" (change)="loadFile($event)">
+                <div class="document"></div>
+                <div *ngIf="urlFile?.url" class="full"></div>
+                <input type="text" id="message" name="message" placeholder="{{ 'text-placeholder' | translate }}" [style.fontSize]="currentSize.text"
                     [(ngModel)]="message" (keyup.enter)="sendMessage()">
                 <div class="send-icon" (click)="sendMessage()"></div>
             </div>
@@ -220,20 +206,17 @@
             <div class="body">
                 <div class="info image">
                     <img [src]="currentContact?.image" alt="image">
-                    <h3>{{ currentContact?.userName }}</h3>
+                    <h3 [style.fontSize]="currentSize.title">{{ currentContact?.userName }}</h3>
                 </div>
                 <div class="info">
-                    <h4>{{ 'contact.email' | translate }}</h4>
-                    <p>{{ currentContact?.email }}</p>
+                    <h4 [style.fontSize]="currentSize.text">{{ 'contact.email' | translate }}</h4>
+                    <p [style.fontSize]="currentSize.text">{{ currentContact?.email }}</p>
                 </div>
                 <div class="send item" (click)="openUserInfo()">
-                    <p>{{ 'contact.send' | translate }}</p>
+                    <p [style.fontSize]="currentSize.text">{{ 'contact.send' | translate }}</p>
                 </div>
                 <div class="clear item" (click)="clearHistory()">
-                    <div class="clear-icon"
-                        [style.backgroundImage]="isDark ? 'url(../../../assets/icons/bin-white.svg)' : 'url(../../../assets/icons/bin.svg)'">
-                    </div>
-                    <p>{{ 'contact.clear' | translate }}</p>
+                    <p [style.fontSize]="currentSize.text">{{ 'contact.clear' | translate }}</p>
                 </div>
             </div>
         </div>

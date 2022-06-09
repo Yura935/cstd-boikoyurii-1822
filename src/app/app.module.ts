@@ -24,6 +24,7 @@ import { DeleteModalComponent } from './components/delete-modal/delete-modal.com
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { ClearHistoryModalComponent } from './components/clear-history-modal/clear-history-modal.component';
+import { SettingsModalComponent } from './components/settings-modal/settings-modal.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json?cb=" + new Date().getTime());
@@ -37,6 +38,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     FilterPipe,
     DeleteModalComponent,
     ClearHistoryModalComponent,
+    SettingsModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -61,7 +63,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatDialogModule,
     MatButtonModule
   ],
-  providers: [],
+  providers: [FilterPipe],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

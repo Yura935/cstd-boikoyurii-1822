@@ -1,0 +1,123 @@
+::ng-deep .settings-matDialog-styles {
+  .mat-dialog-container {
+    margin: auto !important;
+    max-height: 450px;
+
+    .title {
+      text-align: center;
+      margin-bottom: 10px;
+      cursor: default;
+    }
+
+    .settings {
+      display: flex;
+      flex-direction: column;
+      width: 300px;
+
+      .item {
+        width: 100%;
+        margin-bottom: 10px;
+        position: relative;
+
+        p {
+          height: 40px;
+          padding-left: 20px;
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+        }
+      }
+
+      .item p:hover {
+        background-color: rgba(168, 168, 168, 0.28);
+      }
+
+      .languages {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        height: 45px;
+
+        label {
+          margin-right: 10px;
+        }
+
+        input {
+          width: 30px;
+          padding-left: 5px;
+        }
+
+        .change {
+          width: 25px;
+          height: 25px;
+          background-image: url(../../../assets/icons/arrows.svg);
+          background-size: contain;
+          border: 1px solid gray;
+          border-radius: 4px;
+          padding: 5px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+.btn {
+  height: 40px;
+  padding-left: 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.item input[type=file] {
+  position: absolute;
+  top: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.langItems {
+  .item {
+    min-height: 30px;
+    padding: 5px 20px;
+    margin: 0;
+    cursor: pointer;
+
+    label {
+      margin-left: 15px;
+      cursor: pointer;
+    }
+
+    input {
+      cursor: pointer;
+    }
+  }
+}
+
+.sizeItems {
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 30px;
+
+  .box {
+    width: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+
+    input{
+      margin-bottom: 5px;
+    }
+  }
+
+  .line{
+    height: 1px;
+    width: 85px;
+    background-color: darkgray;
+    margin-top: 5px;
+  }
+}

@@ -74,7 +74,7 @@ main {
   overflow-x: hidden;
 
   &-title {
-    height: 35px;
+    // height: 35px;
     line-height: 1.5;
     color: darkturquoise;
     padding-left: 10px;
@@ -82,7 +82,7 @@ main {
 
   &-items {
     &__block {
-      min-height: 60px;
+      // min-height: 60px;
       display: flex;
       flex-direction: column;
       margin-bottom: 5px;
@@ -129,44 +129,46 @@ main {
       }
     }
 
-    .userList-all {
-      min-height: 60px;
 
-      h2 {
-        height: 35px;
-        line-height: 1.5;
-        color: darkturquoise;
-        padding-left: 10px;
-      }
+  }
+}
 
-      .user {
-        display: flex;
-        padding: 10px 5px;
-        border-bottom: 1px solid lightgray;
-        cursor: pointer;
-      }
+.userList-all {
+  min-height: 60px;
 
-      .user:hover {
-        background-color: rgba(168, 168, 168, 0.28);
-      }
+  h2 {
+    // min-height: 35px;
+    line-height: 1.5;
+    color: darkturquoise;
+    padding-left: 10px;
+  }
 
-      img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-      }
+  .user {
+    display: flex;
+    padding: 10px 5px;
+    border-bottom: 1px solid lightgray;
+    cursor: pointer;
+  }
 
-      .usersList-all--right {
-        width: 80%;
-        margin-left: 10px;
+  .user:hover {
+    background-color: rgba(168, 168, 168, 0.28);
+  }
 
-        h3 {
-          width: 130px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-      }
+  img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+
+  .usersList-all--right {
+    width: 80%;
+    margin-left: 10px;
+
+    h3 {
+      width: 130px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 }
@@ -212,7 +214,9 @@ main {
 
     .head-nick {
       width: 95px;
-      font-size: 22px;
+      // font-size: 22px;
+      font-weight: 600;
+      font-style: italic;
       overflow: hidden;
       text-overflow: ellipsis;
       margin-right: 5px;
@@ -286,7 +290,7 @@ main {
 
       &-title {
         margin-left: 10px;
-        font-size: 20px;
+        // font-size: 20px;
         font-family: sans-serif;
       }
     }
@@ -294,134 +298,124 @@ main {
     .item:hover {
       background-color: rgba(168, 168, 168, 0.28);
     }
-
-    .langItems {
-      width: 70px;
-      position: absolute;
-      right: 0;
-      top: 105px;
-
-      .item {
-        min-height: 30px;
-        padding: 5px;
-
-        label {
-          margin-left: 7px;
-          cursor: pointer;
-        }
-      }
-    }
   }
 }
 
 .editData {
-  min-width: 420px;
+  width: 100%;
+  height: 100vh;
   position: absolute;
-  top: 70px;
-  left: 550px;
+  top: 0;
+  left: 0;
   z-index: 1;
-  border-radius: 5px;
-  padding: 10px;
-  transition: all 0.5s;
-  font-family: sans-serif;
+  background-color: rgba(97, 97, 97, 0.589);
+  align-items: center;
+  justify-content: center;
 
-
-  .head {
-    height: 50px;
-    text-align: center;
+  &-inner {
+    width: 420px;
+    min-height: 200px;
+    border-radius: 4px;
     padding: 10px;
-    position: relative;
+    font-family: sans-serif;
 
-    .close {
-      width: 20px;
-      height: 20px;
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      cursor: pointer;
+
+    .head {
+      height: 50px;
+      text-align: center;
+      padding: 10px;
+      position: relative;
+
+      .close {
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+      }
     }
-  }
 
-  .body {
-    .item {
-      width: 100%;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 10px;
+    .body {
+      .item {
+        width: 100%;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 10px;
 
-      label {
-        font-size: 20px;
-        margin-right: 20px;
+        label {
+          margin-right: 20px;
+        }
+
+        #userName,
+        #email {
+          height: 30px;
+          outline: none;
+          border: 1px solid gray;
+          border-radius: 4px;
+          padding-left: 10px;
+        }
       }
 
-      #userName,
-      #email {
-        height: 30px;
+      .image {
+        height: 120px;
+        flex-direction: column;
+        margin-bottom: 15px;
+
+        img {
+          width: 70px;
+          height: 70px;
+          border-radius: 50%;
+        }
+
+        .upload-btn-wrapper {
+          position: relative;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .btn {
+          width: 65%;
+          border: 2px solid #004e92;
+          color: white;
+          background: linear-gradient(to right, #000428, #243B55);
+          padding: 5px 20px;
+          border-radius: 4px;
+          font-weight: bold;
+          transition: all .250s linear;
+        }
+
+        .upload-btn-wrapper input[type=file] {
+          position: absolute;
+          left: 67px;
+          opacity: 0;
+          width: 65%;
+          height: 100%;
+        }
+      }
+    }
+
+    .button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 10px;
+
+      input {
+        min-width: 100px;
+        padding: 0 10px;
+        height: 35px;
         outline: none;
         border: 1px solid gray;
+        cursor: pointer;
         border-radius: 4px;
-        padding-left: 10px;
+        color: #ffffff;
+        background: linear-gradient(to right, #232526, #414345);
       }
-    }
-
-    .image {
-      height: 120px;
-      flex-direction: column;
-      margin-bottom: 15px;
-
-      img {
-        width: 70px;
-        height: 70px;
-        border-radius: 50%;
-      }
-
-      .upload-btn-wrapper {
-        position: relative;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .btn {
-        width: 65%;
-        border: 2px solid #004e92;
-        color: white;
-        background: linear-gradient(to right, #000428, #243B55);
-        padding: 5px 20px;
-        border-radius: 4px;
-        font-size: 18px;
-        font-weight: bold;
-        transition: all .250s linear;
-      }
-
-      .upload-btn-wrapper input[type=file] {
-        position: absolute;
-        left: 67px;
-        opacity: 0;
-        width: 65%;
-        height: 100%;
-      }
-    }
-  }
-
-  .button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 10px;
-
-    input {
-      min-width: 100px;
-      height: 35px;
-      outline: none;
-      border: 1px solid gray;
-      cursor: pointer;
-      border-radius: 4px;
-      color: #ffffff;
-      background: linear-gradient(to right, #232526, #414345);
     }
   }
 }
@@ -459,20 +453,17 @@ main {
     display: flex;
     align-items: center;
     padding: 10px;
-    height: 42px;
     cursor: pointer;
-  }
-
-  &-add {
-    font-size: 20px;
   }
 }
 
 .messanger {
-  height: 82vh;
+  height: 80vh;
   border-bottom: 1px solid lightgray;
-  transition: all 0.5s;
+  transition: all 1s;
   overflow-y: auto;
+  background-repeat: no-repeat;
+  background-size: cover;
 
   &-items {
     display: flex;
@@ -498,7 +489,7 @@ main {
       display: block;
     }
 
-    .hidden {
+    .hidden-block {
       position: relative;
     }
 
@@ -513,8 +504,7 @@ main {
       z-index: 1;
 
       .point {
-        height: 35px;
-        line-height: 35px;
+        line-height: 30px;
         cursor: pointer;
         padding: 0 5px 0 15px;
         display: flex;
@@ -530,7 +520,9 @@ main {
         background-image: url(../../../assets/icons/check.svg);
         background-position: center;
         background-size: cover;
-        margin: 5px 0 5px 50px;
+        position: absolute;
+        top: 5px;
+        right: 5px;
         display: none;
       }
     }
@@ -547,12 +539,10 @@ main {
     }
 
     .message-text {
-      min-height: 35px;
       max-width: 300px;
       white-space: break-spaces;
       word-break: break-all;
       color: #fff;
-      border-radius: 15px;
       padding: 10px 15px;
     }
 
@@ -566,6 +556,7 @@ main {
 
         .message-text {
           background-color: slategray;
+          border-radius: 0px 10px 10px 10px;
         }
       }
     }
@@ -578,26 +569,26 @@ main {
         flex-direction: column;
         align-items: flex-end;
 
-        .hidden {
+        .hidden-block {
           margin-right: 180px;
         }
 
         .message-text {
           background-color: gray;
+          border-radius: 10px 0px 10px 10px;
         }
       }
     }
 
     .message-date {
-      color: lightgray;
+      color: darkgray;
       margin-top: 5px;
-      font-size: 11px;
     }
   }
 }
 
 .blockSending {
-  height: 8vh;
+  height: 10vh;
   padding: 10px 20px;
   display: flex;
   justify-content: center;
@@ -605,7 +596,7 @@ main {
   transition: all 0.5s;
   position: relative;
 
-  .edit{
+  .edit {
     width: 100%;
     position: absolute;
     top: -30px;
@@ -614,7 +605,7 @@ main {
     padding: 5px 10px;
     height: 30px;
 
-    .icon{
+    .icon {
       width: 20px;
       height: 20px;
       background-image: url(../../../assets/icons/warning.svg);
@@ -622,11 +613,7 @@ main {
       margin-right: 10px;
     }
 
-    .text{
-      line-height: 1.5;
-    }
-
-    .close{
+    .close {
       width: 15px;
       height: 15px;
       background-image: url(../../../assets/icons/close.svg);
@@ -649,18 +636,28 @@ main {
       position: absolute;
       top: 7px;
       left: 10px;
-      cursor: pointer;
     }
 
-    .file {
+    #file{
       position: absolute;
-      width: 7px;
-      height: 7px;
+      top: 7px;
+      left: 10px;
+      opacity: 0;
+      width: 20px;
+      height: 20px;
+      padding: 0;
+      z-index: 1;
+      cursor: pointer;
+    }
+    
+    .full {
+      position: absolute;
+      width: 6px;
+      height: 6px;
       background-color: red;
       border-radius: 50%;
       top: 7px;
       left: 25px;
-      display: none;
     }
 
     input {
@@ -725,7 +722,7 @@ main {
       }
 
       .image {
-        height: 105px;
+        height: 110px;
         flex-direction: column;
 
         img {
@@ -754,15 +751,12 @@ main {
         margin: 5px 0;
         position: relative;
       }
-
-      .clear-icon {
-        position: absolute;
-        left: 5px;
-        top: 3px;
-        width: 25px;
-        height: 25px;
-        background-size: contain;
-      }
     }
   }
+}
+
+#notFound {
+  padding: 10px;
+  font-style: italic;
+  text-align: center;
 }

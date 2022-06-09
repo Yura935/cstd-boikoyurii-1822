@@ -31,10 +31,26 @@ export class AuthComponent implements OnInit {
 
   signUp(): void {
     this.dataService.signUp(this.authForm.value);
+    const obj = {
+      isDark: false,
+      mainColor: "#fefefe",
+      mainHeadColor: "slategrey",
+      mainTextColor: "#000",
+      currentElement: "url(../../../assets/icons/close.svg)"
+    }
+    localStorage.setItem('theme', JSON.stringify(obj));
   }
 
   signIn(): void {
     this.dataService.signIn(this.signInForm.value);
+    const obj = {
+      isDark: false,
+      mainColor: "#fefefe",
+      mainHeadColor: "slategrey",
+      mainTextColor: "#000",
+      currentElement: "url(../../../assets/icons/close.svg)"
+    }
+    localStorage.setItem('theme', JSON.stringify(obj));
   }
 
   changeChoise(): void {

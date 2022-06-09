@@ -7,6 +7,7 @@ export class UserData implements IUserData {
         public image: string,
         public email: string,
         public contacts: Array<IContact>,
+        public backgroundChat: string,
         public id?: string
     ) { }
 }

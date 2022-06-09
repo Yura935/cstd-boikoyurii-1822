@@ -11,6 +11,12 @@ import { IMessage } from 'src/app/interfaces/message.interface';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DeleteModalComponent } from '../delete-modal/delete-modal.component';
 import { ClearHistoryModalComponent } from '../clear-history-modal/clear-history-modal.component';
+import { SettingsModalComponent } from '../settings-modal/settings-modal.component';
+import { FilterPipe } from 'src/app/pipes/filter.pipe';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { ThemeService } from 'src/app/services/theme.service';
+import { FontSize } from 'src/app/classes/fontSize.model';
+import { File } from 'src/app/classes/file.model';
 
 @Component({
   selector: 'app-home',
@@ -20,7 +26,7 @@ import { ClearHistoryModalComponent } from '../clear-history-modal/clear-history
 
 export class HomeComponent implements OnInit {
   left: string = '-300px';
-  isDark: boolean = false;
+  isDark: boolean;
   bgColorHead: string = 'slategrey';
   bgColor: string = '#fefefe';
   user: IUserData;
@@ -32,6 +38,7 @@ export class HomeComponent implements OnInit {
   email: string = '';
   changeLang: boolean = false;
   currentElement: string = 'url(../../../assets/icons/close.svg)';
+  defaultBackground: string = 'https://firebasestorage.googleapis.com/v0/b/clearchat-e1062.appspot.com/o/image%2Fmobile-apps-pattern-260nw-362377472.webp?alt=media&token=3f4cb8a8-6713-43e5-a206-9f5259cf2b65';
   allUsers = [];
   all = [];
   lang: string = 'en';
@@ -48,17 +55,67 @@ export class HomeComponent implements OnInit {
   currentMessageIDHTML = '';
   currentDocument;
   editMess = false;
+  transLang;
+  theme;
+  backgroundImage: string = '';
+  currentSize: FontSize;
+  urlFile: File;
 
-  constructor(private dataService: DataService, private translate: TranslateService, private router: Router, public dialog: MatDialog) { }
+  constructor(
+    private dataService: DataService,
+    private themeService: ThemeService,
+    private translate: TranslateService,
+    private router: Router,
+    public dialog: MatDialog,
+    private filter: FilterPipe,
+    private storage: AngularFireStorage) { }
 
   ngOnInit(): void {
     this.getUserData();
     this.getAllUsers();
-    this.dataService.mainColor.subscribe(data => this.bgColor = data);
-    this.dataService.mainHeadColor.subscribe(data => this.bgColorHead = data);
-    this.dataService.mainTextColor.subscribe(data => this.textColor = data);
-    this.dataService.currentElement.subscribe(data => this.currentElement = data);
+    this.themeService.mainColor.subscribe(data => this.bgColor = data);
+    this.themeService.mainHeadColor.subscribe(data => this.bgColorHead = data);
+    this.themeService.mainTextColor.subscribe(data => this.textColor = data);
+    this.themeService.currentElement.subscribe(data => this.currentElement = data);
     this.currentUser = JSON.parse(localStorage.getItem('contact'));
+    if (!localStorage.getItem('transLang')) {
+      this.transLang = { from: "en", to: "uk" };
+      localStorage.setItem('transLang', JSON.stringify(this.transLang));
+    }
+    else {
+      this.transLang = JSON.parse(localStorage.getItem('transLang'));
+    }
+    this.currentSize = JSON.parse(localStorage.getItem('fontSize'));
+
+    this.checkFilter();
+    this.themeInit();
+    this.themeService.backgroundImage
+      .subscribe(data => {
+        if (data) {
+          this.backgroundImage = data;
+        }
+      });
+    if (!localStorage.getItem('currentLanguage')) {
+      localStorage.setItem('currentLanguage', JSON.stringify(this.lang));
+    }
+    else {
+      this.lang = JSON.parse(localStorage.getItem('currentLanguage'));
+      this.translate.use(this.lang);
+    }
+    this.themeService.fontSize.subscribe(data => {
+      if (data) {
+        this.currentSize = data;
+      }
+    });
+  }
+
+  themeInit(): void {
+    this.theme = JSON.parse(localStorage.getItem('theme'));
+    this.isDark = this.theme.isDark;
+    this.themeService.setMainColor(this.theme.mainColor);
+    this.themeService.setMainHeadColor(this.theme.mainHeadColor);
+    this.themeService.setMainTextColor(this.theme.mainTextColor);
+    this.themeService.setCurrentElement(this.theme.currentElement);
   }
 
   openUserInfo(): void {
@@ -74,49 +131,43 @@ export class HomeComponent implements OnInit {
     this.changeLang = false;
   }
 
-  openLangModal(): void {
-    this.changeLang = !this.changeLang;
-  }
-
-  changeLanguage(element): void {
-    if (element.id === 'en') {
-      this.lang = 'en';
-    }
-    else {
-      this.lang = 'ua';
-    }
-  }
-
   toggleView(): void {
     this.isDark = !this.isDark;
     this.changeLang = false;
     if (this.isDark) {
-      this.dataService.setMainColor('#3C3B3F');
-      this.dataService.setMainHeadColor('#141E30');
-      this.dataService.setMainTextColor('#fff');
-      this.dataService.setCurrentElement('url(../../../assets/icons/closeW.svg)');
+      const obj = {
+        isDark: true,
+        mainColor: "#3C3B3F",
+        mainHeadColor: "#141E30",
+        mainTextColor: "#fff",
+        currentElement: "url(../../../assets/icons/closeW.svg)"
+      }
+      localStorage.setItem('theme', JSON.stringify(obj));
+      this.themeService.setMainColor('#3C3B3F');
+      this.themeService.setMainHeadColor('#141E30');
+      this.themeService.setMainTextColor('#fff');
+      this.themeService.setCurrentElement('url(../../../assets/icons/closeW.svg)');
     }
     else {
-      this.dataService.setMainColor('#fefefe');
-      this.dataService.setMainHeadColor('slategrey');
-      this.dataService.setMainTextColor('#000');
-      this.dataService.setCurrentElement('url(../../../assets/icons/close.svg)');
+      const obj = {
+        isDark: false,
+        mainColor: "#fefefe",
+        mainHeadColor: "slategrey",
+        mainTextColor: "#000",
+        currentElement: "url(../../../assets/icons/close.svg)"
+      }
+      localStorage.setItem('theme', JSON.stringify(obj));
+      this.themeService.setMainColor('#fefefe');
+      this.themeService.setMainHeadColor('slategrey');
+      this.themeService.setMainTextColor('#000');
+      this.themeService.setCurrentElement('url(../../../assets/icons/close.svg)');
     }
-  }
-
-  readFile(file): void {
-    var reader = new FileReader();
-    let image;
-    reader.onload = (e) => {
-      image = e.target.result;
-      this.image = image;
-    }
-    reader.readAsDataURL(file.files[0]);
   }
 
   getUserData(): void {
     if (JSON.parse(localStorage.getItem('user'))) {
       this.user = JSON.parse(localStorage.getItem('user'));
+      this.backgroundImage = this.user.backgroundChat;
       this.image = this.user.image;
     }
   }
@@ -226,7 +277,7 @@ export class HomeComponent implements OnInit {
 
   openEditModal(): void {
     this.closeSideBar();
-    this.display === "none" ? this.display = "block" : this.display = "none";
+    this.display === "none" ? this.display = "flex" : this.display = "none";
     this.userName = this.user.userName;
     this.email = this.user.email;
     this.image = this.user.image;
@@ -294,6 +345,7 @@ export class HomeComponent implements OnInit {
       image: this.currentContact.image,
       email: this.currentContact.email,
       contacts: [],
+      backgroundChat: this.defaultBackground,
       id: this.currentContact.id
     }
     const curUser = {
@@ -318,6 +370,7 @@ export class HomeComponent implements OnInit {
       userName: user.userName,
       email: user.email,
       image: user.image,
+      backgroundChat: user.backgroundChat,
       contacts: user.contacts || []
     }
 
@@ -333,7 +386,7 @@ export class HomeComponent implements OnInit {
   translateMessage(sourceText: string, id: string): void {
     if (!this.data[id]) {
       this.data[id] = document.querySelector(`#mes${id}`).textContent;
-      this.getJSON(sourceText, this.lang).subscribe((data) => {
+      this.getJSON(sourceText, this.transLang.from, this.transLang.to).subscribe((data) => {
         document.querySelector(`#mes${id}`).textContent = data[0][0][0];
       });
       (document.querySelector(`#ch${id}`) as HTMLElement).style.display = 'block';
@@ -345,11 +398,8 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  public getJSON(sourceText: string, lang: string): Observable<any> {
-    if (lang === 'ua') {
-      return ajax.getJSON('https://translate.googleapis.com/translate_a/single?client=gtx&sl=uk&tl=en&dt=t&q=' + encodeURI(sourceText));
-    }
-    return ajax.getJSON('https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=uk&dt=t&q=' + encodeURI(sourceText));
+  public getJSON(sourceText: string, langFrom: string, langTo: string): Observable<any> {
+    return ajax.getJSON(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${langFrom}&tl=${langTo}&dt=t&q=` + encodeURI(sourceText));
   }
 
   sendMessage(): void {
@@ -396,6 +446,7 @@ export class HomeComponent implements OnInit {
             image: this.currentContact.image,
             email: this.currentContact.email,
             contacts: contact.contacts,
+            backgroundChat: '',
             id: this.currentContact.id
           }
         }
@@ -412,7 +463,7 @@ export class HomeComponent implements OnInit {
         this.updateInfo(this.currentUser);
         this.message = '';
         this.currentMessageId++;
-      }      
+      }
     }
     else {
       this.messages.forEach(el => {
@@ -447,6 +498,12 @@ export class HomeComponent implements OnInit {
     } else {
       this.currentMessageIDHTML = `${id}`;
       (document.querySelector(`#m${id}`) as HTMLElement).style.visibility = "unset";
+      const elements = document.getElementsByClassName('settings');
+      for (let i = 0; i < elements.length; i++) {
+        if (i !== +this.currentMessageIDHTML) {
+          (elements[i] as HTMLElement).style.visibility = 'hidden';
+        }
+      }
     }
   }
 
@@ -456,21 +513,16 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  uploadFile(): void {
-    let fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.addEventListener('change', event => {
-      const target = event.target as HTMLInputElement;
-      const selectedFile = target.files[0];
-      const uploadData = new FormData();
-      uploadData.append('upload_file', selectedFile, selectedFile.name);
-      this.currentDocument = uploadData;
-      console.log(selectedFile);
-      (document.querySelector('.file') as HTMLElement).style.display = 'block';
-      // непосредственно отправить файл (post запрос)
-      fileInput = null;
+  uploadImage(event): void {
+    const file = event.target.files[0];
+    const filePath = `image/${file.name}`;
+    const upload = this.storage.upload(filePath, file);
+
+    upload.then(image => {
+      this.storage.ref(`image/${image.metadata.name}`).getDownloadURL().subscribe(url => {
+        this.image = url;
+      });
     });
-    fileInput.click();
   }
 
   editMessage(mess: IMessage): void {
@@ -511,4 +563,53 @@ export class HomeComponent implements OnInit {
     this.dialog.open(ClearHistoryModalComponent, dialogConfig);
     this.openUserInfo();
   }
+
+  openSettings(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.panelClass = 'settings-matDialog-styles';
+
+    dialogConfig.data = {
+      myUser: this.user,
+    }
+    const dialogRef = this.dialog.open(SettingsModalComponent, dialogConfig);
+    dialogRef
+      .afterClosed()
+      .subscribe(() => {
+        this.transLang = JSON.parse(localStorage.getItem('transLang'));
+      });
+    this.closeSideBar();
+  }
+
+  checkFilter(): number {
+    return this.filter.transform(this.user.contacts, this.search).length || this.filter.transform(this.allUsers, this.search).length;
+  }
+
+  loadFile(event): void {
+    const file = event.target ? event.target.files[0] : event;    
+    console.log(file);
+
+    const path = `files/${file.name}`;
+    const upload = this.storage.upload(path, file);
+
+    upload.then(file => {
+      this.storage.ref(`files/${file.metadata.name}`).getDownloadURL().subscribe(url => {
+        this.urlFile = {
+          url: url,
+          name: file.metadata.name
+        }
+      })
+    });
+  }
+
+  downloadFile(file: File): void {
+    var el = document.createElement('a');
+    el.setAttribute('href', file.url);
+    el.setAttribute('target', '_blank');
+    el.setAttribute('download', file.name);
+    el.style.display = 'none';
+    document.body.appendChild(el);
+    el.click();
+    document.body.removeChild(el);
+  }
+
 }

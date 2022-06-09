@@ -1,8 +1,6 @@
 {
     "sidebar": {
         "settings": "Налаштування",
-        "lang": "Мова",
-        "fontSize": "Розмір шрифту",
         "nightMode": "Темний режим"
     },
     "search-placeholder": "Знайти чат...",
@@ -55,5 +53,19 @@
         "check": "Також очистити для {{currentUserName}}",
         "clear": "Очистити",
         "cancel": "Скасувати"
+    },
+    "blockSending": {
+        "warn": "Редагування повідомлення!"
+    },
+    "usersNotFound": "Користувачів з іменем {{name}} не знайдено",
+    "generalSettings": {
+        "title": "Налаштування",
+        "language": "Мова",
+        "translation": "Встановити мову перекладу",
+        "from": "З:",
+        "to": "На:",
+        "background": "Вибрати задній фон",
+        "defaultBackground": "Встановити фон по замовчуванню",
+        "fontSize": "Розмір тексту"
     }
 }

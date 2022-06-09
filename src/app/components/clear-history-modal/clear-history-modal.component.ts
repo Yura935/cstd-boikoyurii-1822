@@ -1,8 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FontSize } from 'src/app/classes/fontSize.model';
 import { IMessage } from 'src/app/interfaces/message.interface';
 import { IUserData } from 'src/app/interfaces/userData.interface';
-import { DataService } from 'src/app/services/data.service';
+import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
   selector: 'app-clear-history-modal',
@@ -16,8 +17,10 @@ export class ClearHistoryModalComponent implements OnInit {
   update;
   isCheck: boolean = false;
   lastMessage: IMessage;
+  currentSize: FontSize;
 
-  constructor(private dataService: DataService, public dialogRef: MatDialogRef<ClearHistoryModalComponent>,
+  constructor(public dialogRef: MatDialogRef<ClearHistoryModalComponent>,
+    private themeService: ThemeService,
     @Inject(MAT_DIALOG_DATA)
     public data: {
       user: IUserData,
@@ -26,6 +29,7 @@ export class ClearHistoryModalComponent implements OnInit {
     }) { }
 
   ngOnInit(): void {
+    this.currentSize = JSON.parse(localStorage.getItem('fontSize'));
     this.user = this.data.myUser;
     this.currentUser = this.data.user;
     this.update = this.data.updateInfo;
@@ -36,7 +40,12 @@ export class ClearHistoryModalComponent implements OnInit {
       message: '',
       date: null,
       edited: false
-    }
+    };
+    this.themeService.fontSize.subscribe(data => {
+      if(data) {
+        this.currentSize = data;        
+      }
+    }); 
   }
 
   onNoClick(): void {

@@ -5,5 +5,6 @@ export interface IUserData {
     image: string;
     email: string;
     contacts: Array<IContact>;
+    backgroundChat: string;
     id?: string;
 }

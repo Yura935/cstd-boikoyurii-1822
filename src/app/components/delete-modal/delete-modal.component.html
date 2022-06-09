@@ -1,11 +1,11 @@
-<h2>{{ 'deleteModal.title' | translate }}</h2>
+<h2 [style.fontSize]="currentSize.title">{{ 'deleteModal.title' | translate }}</h2>
 <div class="check">
     <input type="checkbox" name="check" id="check" [checked]="isCheck" (click)="toggleCheck()">
-    <label for="check">{{ 'deleteModal.check' | translate: {currentUserName: currentUserName} }}</label>
+    <label for="check" [style.fontSize]="currentSize.text">{{ 'deleteModal.check' | translate: {currentUserName: currentUserName} }}</label>
 </div>
 <div class="block">
     <div class="box">
-        <button mat-raised-button color="warn" (click)="onNoClick()">{{ 'deleteModal.cancel' | translate }}</button>
-        <button mat-raised-button color="primary" (click)="deleteMesage()">{{ 'deleteModal.delete' | translate }}</button>
+        <button mat-raised-button color="warn" [style.fontSize]="currentSize.text" (click)="onNoClick()">{{ 'deleteModal.cancel' | translate }}</button>
+        <button mat-raised-button color="primary" [style.fontSize]="currentSize.text" (click)="deleteMesage()">{{ 'deleteModal.delete' | translate }}</button>
     </div>
 </div>
