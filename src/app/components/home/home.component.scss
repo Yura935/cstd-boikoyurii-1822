@@ -122,8 +122,10 @@ main {
           color: gray;
 
           p {
+            width: 200px;
             overflow: hidden;
             text-overflow: ellipsis;
+            white-space: nowrap;
           }
         }
       }
@@ -137,7 +139,6 @@ main {
   min-height: 60px;
 
   h2 {
-    // min-height: 35px;
     line-height: 1.5;
     color: darkturquoise;
     padding-left: 10px;
@@ -177,6 +178,7 @@ main {
   height: 100%;
   width: 280px;
   position: absolute;
+  left: -300px;
   z-index: 1;
   transition: all 0.5s;
   border-right: 1px solid lightgray;
@@ -214,7 +216,6 @@ main {
 
     .head-nick {
       width: 95px;
-      // font-size: 22px;
       font-weight: 600;
       font-style: italic;
       overflow: hidden;
@@ -290,7 +291,6 @@ main {
 
       &-title {
         margin-left: 10px;
-        // font-size: 20px;
         font-family: sans-serif;
       }
     }
@@ -299,6 +299,10 @@ main {
       background-color: rgba(168, 168, 168, 0.28);
     }
   }
+}
+
+.left {
+  left: 0;
 }
 
 .editData {
@@ -558,6 +562,24 @@ main {
           background-color: slategray;
           border-radius: 0px 10px 10px 10px;
         }
+
+        .box {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+
+          .document {
+            background-image: url(../../../assets/icons/document.svg);
+            background-size: contain;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+          }
+        }
+
+        .fileName {
+          color: darkgray;
+        }
       }
     }
 
@@ -576,6 +598,25 @@ main {
         .message-text {
           background-color: gray;
           border-radius: 10px 0px 10px 10px;
+        }
+
+        .box {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+
+          .document {
+            background-image: url(../../../assets/icons/document.svg);
+            background-size: contain;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+          }
+        }
+
+        .fileName {
+          color: darkgray;
+          text-align: end;
         }
       }
     }
@@ -638,7 +679,7 @@ main {
       left: 10px;
     }
 
-    #file{
+    #file {
       position: absolute;
       top: 7px;
       left: 10px;
@@ -649,7 +690,7 @@ main {
       z-index: 1;
       cursor: pointer;
     }
-    
+
     .full {
       position: absolute;
       width: 6px;

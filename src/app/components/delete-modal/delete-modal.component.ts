@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FontSize } from 'src/app/classes/fontSize.model';
 import { IMessage } from 'src/app/interfaces/message.interface';
 import { IUserData } from 'src/app/interfaces/userData.interface';
+import { DataService } from 'src/app/services/data.service';
 import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
@@ -11,7 +12,7 @@ import { ThemeService } from 'src/app/services/theme.service';
   styleUrls: ['./delete-modal.component.scss']
 })
 export class DeleteModalComponent implements OnInit {
-  currentUserName: string = '';
+  currentUserName: string;
   currentUser: IUserData
   isCheck: boolean = false;
   messageID: number;
@@ -24,6 +25,7 @@ export class DeleteModalComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<DeleteModalComponent>,
     private themeService: ThemeService,
+    private dataService: DataService,
     @Inject(MAT_DIALOG_DATA)
     public data: {
       user: IUserData,
@@ -49,13 +51,17 @@ export class DeleteModalComponent implements OnInit {
       userId: this.user.id,
       message: '',
       date: null,
+      file: {
+        url: '',
+        name: ''
+      },
       edited: false
     };
     this.themeService.fontSize.subscribe(data => {
-      if(data) {
-        this.currentSize = data;        
+      if (data) {
+        this.currentSize = data;
       }
-    });    
+    });
   }
 
   onNoClick(): void {

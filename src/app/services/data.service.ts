@@ -13,7 +13,6 @@ export class DataService {
   private dbPath = '/users';
   userRef: AngularFirestoreCollection<IUserData>;
 
-
   constructor(private db: AngularFirestore, private auth: AngularFireAuth, private router: Router) {
     this.userRef = this.db.collection(this.dbPath);
   }
@@ -66,6 +65,7 @@ export class DataService {
     this.auth.signOut()
       .then(() => {
         localStorage.removeItem('user');
+        localStorage.removeItem('contact');
         this.router.navigateByUrl('login');
       })
       .catch(err => {

@@ -1,4 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FIREBASE_OPTIONS } from '@angular/fire';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { environment } from 'src/environments/environment';
 
 import { ClearHistoryModalComponent } from './clear-history-modal.component';
 
@@ -8,7 +11,19 @@ describe('ClearHistoryModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ClearHistoryModalComponent ]
+      declarations: [ ClearHistoryModalComponent ],
+      providers: [
+        { provide: FIREBASE_OPTIONS, useValue: environment.firebaseConfig },
+
+        { 
+        provide: MatDialogRef,
+        useValue: []
+         }, 
+        { 
+        provide: MAT_DIALOG_DATA, 
+        useValue: [] 
+        }
+        ]
     })
     .compileComponents();
   });

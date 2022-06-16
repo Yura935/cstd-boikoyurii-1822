@@ -12,6 +12,21 @@ export class ThemeService {
   public currentElement = new Subject<string>();
   public backgroundImage = new Subject<string>();
   public fontSize = new Subject<FontSize>();
+  public defaultBackground: string = 'https://firebasestorage.googleapis.com/v0/b/clearchat-e1062.appspot.com/o/image%2Fmobile-apps-pattern-260nw-362377472.webp?alt=media&token=3f4cb8a8-6713-43e5-a206-9f5259cf2b65';
+  public light = {
+    isDark: false,
+    mainColor: "#fefefe",
+    mainHeadColor: "slategrey",
+    mainTextColor: "#000",
+    currentElement: "url(../../../assets/icons/close.svg)"
+  };
+  public dark = {
+    isDark: true,
+    mainColor: "#3C3B3F",
+    mainHeadColor: "#141E30",
+    mainTextColor: "#fff",
+    currentElement: "url(../../../assets/icons/closeW.svg)"
+  }
 
   constructor() { }
 

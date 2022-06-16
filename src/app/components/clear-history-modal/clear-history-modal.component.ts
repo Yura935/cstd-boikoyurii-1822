@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FontSize } from 'src/app/classes/fontSize.model';
 import { IMessage } from 'src/app/interfaces/message.interface';
 import { IUserData } from 'src/app/interfaces/userData.interface';
+import { DataService } from 'src/app/services/data.service';
 import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
@@ -21,6 +22,7 @@ export class ClearHistoryModalComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<ClearHistoryModalComponent>,
     private themeService: ThemeService,
+    private dataService: DataService,
     @Inject(MAT_DIALOG_DATA)
     public data: {
       user: IUserData,
@@ -39,13 +41,17 @@ export class ClearHistoryModalComponent implements OnInit {
       userId: this.user.id,
       message: '',
       date: null,
+      file: {
+        url: '',
+        name: ''
+      },
       edited: false
     };
     this.themeService.fontSize.subscribe(data => {
-      if(data) {
-        this.currentSize = data;        
+      if (data) {
+        this.currentSize = data;
       }
-    }); 
+    });
   }
 
   onNoClick(): void {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
@@ -17,6 +17,10 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { ThemeService } from 'src/app/services/theme.service';
 import { FontSize } from 'src/app/classes/fontSize.model';
 import { File } from 'src/app/classes/file.model';
+import { UserData } from 'src/app/classes/userData.model';
+import { Message } from 'src/app/classes/message.model';
+import { Theme } from 'src/app/classes/theme.model';
+import { Translation } from 'src/app/classes/translation.model';
 
 @Component({
   selector: 'app-home',
@@ -24,27 +28,26 @@ import { File } from 'src/app/classes/file.model';
   styleUrls: ['./home.component.scss']
 })
 
-export class HomeComponent implements OnInit {
-  left: string = '-300px';
-  isDark: boolean;
-  bgColorHead: string = 'slategrey';
-  bgColor: string = '#fefefe';
-  user: IUserData;
-  search: string = '';
-  display: string = 'none';
-  textColor: string = '#000';
-  image: string = '';
-  userName: string = '';
-  email: string = '';
-  changeLang: boolean = false;
-  currentElement: string = 'url(../../../assets/icons/close.svg)';
-  defaultBackground: string = 'https://firebasestorage.googleapis.com/v0/b/clearchat-e1062.appspot.com/o/image%2Fmobile-apps-pattern-260nw-362377472.webp?alt=media&token=3f4cb8a8-6713-43e5-a206-9f5259cf2b65';
+export class HomeComponent implements OnInit, AfterViewChecked {
+  @ViewChild('scroll') private myScrollContainer: ElementRef;
+  public left: boolean = false;
+  public isDark: boolean;
+  public bgColorHead: string;
+  public bgColor: string;
+  public user: IUserData;
+  public search: string;
+  public display: string = 'none';
+  public textColor: string;
+  public image: string;
+  userName: string;
+  email: string;
+  currentElement: string;
   allUsers = [];
-  all = [];
+  all: Array<UserData> = [];
   lang: string = 'en';
   isClick: string = 'none';
   message: string;
-  messages = [];
+  messages: Array<Message> = [];
   currentMessageId: number;
   currentContact: Contact;
   isContact: boolean = true;
@@ -55,9 +58,9 @@ export class HomeComponent implements OnInit {
   currentMessageIDHTML = '';
   currentDocument;
   editMess = false;
-  transLang;
-  theme;
-  backgroundImage: string = '';
+  transLang: Translation;
+  theme: Theme;
+  backgroundImage: string;
   currentSize: FontSize;
   urlFile: File;
 
@@ -73,10 +76,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.getUserData();
     this.getAllUsers();
-    this.themeService.mainColor.subscribe(data => this.bgColor = data);
-    this.themeService.mainHeadColor.subscribe(data => this.bgColorHead = data);
-    this.themeService.mainTextColor.subscribe(data => this.textColor = data);
-    this.themeService.currentElement.subscribe(data => this.currentElement = data);
+    this.getThemeElements();
     this.currentUser = JSON.parse(localStorage.getItem('contact'));
     if (!localStorage.getItem('transLang')) {
       this.transLang = { from: "en", to: "uk" };
@@ -109,6 +109,10 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  ngAfterViewChecked(): void {
+    this.scrollToBottom();
+  }
+
   themeInit(): void {
     this.theme = JSON.parse(localStorage.getItem('theme'));
     this.isDark = this.theme.isDark;
@@ -118,54 +122,33 @@ export class HomeComponent implements OnInit {
     this.themeService.setCurrentElement(this.theme.currentElement);
   }
 
+  getThemeElements(): void {
+    this.themeService.mainColor.subscribe(data => this.bgColor = data);
+    this.themeService.mainHeadColor.subscribe(data => this.bgColorHead = data);
+    this.themeService.mainTextColor.subscribe(data => this.textColor = data);
+    this.themeService.currentElement.subscribe(data => this.currentElement = data);
+  }
+
   openUserInfo(): void {
     this.isClick === 'none' ? this.isClick = 'flex' : this.isClick = 'none';
   }
 
-  openSideBar(): void {
-    this.left = '0px';
-  }
-
-  closeSideBar(): void {
-    this.left = '-300px';
-    this.changeLang = false;
+  toggleSidebar(): void {
+    this.left = !this.left;
   }
 
   toggleView(): void {
     this.isDark = !this.isDark;
-    this.changeLang = false;
-    if (this.isDark) {
-      const obj = {
-        isDark: true,
-        mainColor: "#3C3B3F",
-        mainHeadColor: "#141E30",
-        mainTextColor: "#fff",
-        currentElement: "url(../../../assets/icons/closeW.svg)"
-      }
-      localStorage.setItem('theme', JSON.stringify(obj));
-      this.themeService.setMainColor('#3C3B3F');
-      this.themeService.setMainHeadColor('#141E30');
-      this.themeService.setMainTextColor('#fff');
-      this.themeService.setCurrentElement('url(../../../assets/icons/closeW.svg)');
-    }
-    else {
-      const obj = {
-        isDark: false,
-        mainColor: "#fefefe",
-        mainHeadColor: "slategrey",
-        mainTextColor: "#000",
-        currentElement: "url(../../../assets/icons/close.svg)"
-      }
-      localStorage.setItem('theme', JSON.stringify(obj));
-      this.themeService.setMainColor('#fefefe');
-      this.themeService.setMainHeadColor('slategrey');
-      this.themeService.setMainTextColor('#000');
-      this.themeService.setCurrentElement('url(../../../assets/icons/close.svg)');
-    }
+    this.theme = this.isDark ? this.themeService.dark : this.themeService.light;
+    localStorage.setItem('theme', JSON.stringify(this.theme));
+    this.themeService.setMainColor(this.theme.mainColor);
+    this.themeService.setMainHeadColor(this.theme.mainHeadColor);
+    this.themeService.setMainTextColor(this.theme.mainTextColor);
+    this.themeService.setCurrentElement(this.theme.currentElement);
   }
 
   getUserData(): void {
-    if (JSON.parse(localStorage.getItem('user'))) {
+    if (localStorage.getItem('user')) {
       this.user = JSON.parse(localStorage.getItem('user'));
       this.backgroundImage = this.user.backgroundChat;
       this.image = this.user.image;
@@ -272,11 +255,10 @@ export class HomeComponent implements OnInit {
 
   signOut(): void {
     this.dataService.signOut();
-    localStorage.removeItem('contact');
   }
 
   openEditModal(): void {
-    this.closeSideBar();
+    this.left = false;
     this.display === "none" ? this.display = "flex" : this.display = "none";
     this.userName = this.user.userName;
     this.email = this.user.email;
@@ -337,6 +319,10 @@ export class HomeComponent implements OnInit {
         userId: this.currentContact.id,
         message: '',
         date: null,
+        file: {
+          url: '',
+          name: ''
+        },
         edited: false
       }
     }
@@ -345,7 +331,7 @@ export class HomeComponent implements OnInit {
       image: this.currentContact.image,
       email: this.currentContact.email,
       contacts: [],
-      backgroundChat: this.defaultBackground,
+      backgroundChat: this.themeService.defaultBackground,
       id: this.currentContact.id
     }
     const curUser = {
@@ -404,14 +390,15 @@ export class HomeComponent implements OnInit {
 
   sendMessage(): void {
     if (!this.editMess) {
-      if (this.message) {
+      if (this.message || this.urlFile) {
         let count = 0;
         const all = this.user.contacts.length;
         const mess = {
           id: this.currentMessageId,
           userId: this.user.id,
-          message: this.message,
+          message: this.message || '',
           date: new Date(),
+          file: this.urlFile || { url: '', name: '' },
           edited: false
         };
 
@@ -446,7 +433,7 @@ export class HomeComponent implements OnInit {
             image: this.currentContact.image,
             email: this.currentContact.email,
             contacts: contact.contacts,
-            backgroundChat: '',
+            backgroundChat: this.themeService.defaultBackground,
             id: this.currentContact.id
           }
         }
@@ -463,6 +450,10 @@ export class HomeComponent implements OnInit {
         this.updateInfo(this.currentUser);
         this.message = '';
         this.currentMessageId++;
+        this.urlFile = {
+          url: '',
+          name: ''
+        }
       }
     }
     else {
@@ -500,7 +491,7 @@ export class HomeComponent implements OnInit {
       (document.querySelector(`#m${id}`) as HTMLElement).style.visibility = "unset";
       const elements = document.getElementsByClassName('settings');
       for (let i = 0; i < elements.length; i++) {
-        if (i !== +this.currentMessageIDHTML) {
+        if (i != +this.currentMessageIDHTML) {
           (elements[i] as HTMLElement).style.visibility = 'hidden';
         }
       }
@@ -577,7 +568,7 @@ export class HomeComponent implements OnInit {
       .subscribe(() => {
         this.transLang = JSON.parse(localStorage.getItem('transLang'));
       });
-    this.closeSideBar();
+    this.toggleSidebar();
   }
 
   checkFilter(): number {
@@ -585,7 +576,7 @@ export class HomeComponent implements OnInit {
   }
 
   loadFile(event): void {
-    const file = event.target ? event.target.files[0] : event;    
+    const file = event.target ? event.target.files[0] : event;
     console.log(file);
 
     const path = `files/${file.name}`;
@@ -610,6 +601,14 @@ export class HomeComponent implements OnInit {
     document.body.appendChild(el);
     el.click();
     document.body.removeChild(el);
+  }
+
+  scrollToBottom(): void {
+    try {
+      this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+    } catch (err) {
+      alert(err);
+    }
   }
 
 }

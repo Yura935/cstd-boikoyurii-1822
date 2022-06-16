@@ -1,7 +1,7 @@
 <main>
     <section class="menu">
         <div class="menu-inner" [style.backgroundColor]="bgColorHead">
-            <div class="menu-burger" (click)="openSideBar()">
+            <div class="menu-burger" (click)="toggleSidebar()">
                 <div class="burger" [style.backgroundColor]="textColor"></div>
                 <div class="burger" [style.backgroundColor]="textColor"></div>
                 <div class="burger" [style.backgroundColor]="textColor"></div>
@@ -26,7 +26,10 @@
                                 <h3 [style.fontSize]="currentSize.title">{{ item?.userName }}</h3>
                             </div>
                             <div class="block-message" *ngIf="item.lastMessage">
-                                <p [style.color]="isDark ? 'darkgray' : 'gray'" [style.fontSize]="currentSize.text">{{ item.lastMessage.message }}</p>
+                                <p *ngIf="!item.lastMessage.file?.url" [style.color]="isDark ? 'darkgray' : 'gray'"
+                                    [style.fontSize]="currentSize.text">{{ item.lastMessage.message }}</p>
+                                <p *ngIf="item.lastMessage.file?.url" [style.color]="isDark ? 'darkgray' : 'gray'"
+                                    [style.fontSize]="currentSize.text">{{ item.lastMessage.file.name }}</p>
                             </div>
                         </div>
                     </div>
@@ -45,15 +48,16 @@
                 </div>
             </div>
             <div *ngIf="!checkFilter()" class="usersList-items-none">
-                <p id="notFound" [style.color]="isDark ? 'darkgray' : 'gray'" [style.fontSize]="currentSize.text">{{ 'usersNotFound' | translate: {name:
+                <p id="notFound" [style.color]="isDark ? 'darkgray' : 'gray'" [style.fontSize]="currentSize.text">{{
+                    'usersNotFound' | translate: {name:
                     search} }}</p>
             </div>
         </div>
     </section>
 
-    <section class="sidebar" [ngStyle]="{'left': left}" [style.backgroundColor]="bgColor">
+    <section class="sidebar" [class.left]="left" [style.backgroundColor]="bgColor">
         <div class="sidebar-head" [style.backgroundColor]="bgColorHead" [style.color]="textColor">
-            <div class="head-close" (click)="closeSideBar()" [style.color]="textColor">
+            <div class="head-close" (click)="toggleSidebar()" [style.color]="textColor">
                 < </div>
                     <div class="head-image">
                         <img class="head-image__box" [src]="user?.image">
@@ -69,7 +73,8 @@
             <div class="sidebar-items" [style.color]="isDark ? '#fff' : '#000'">
                 <div class="item" (click)="openSettings()">
                     <img class="item-img" src="assets/icons/settings.svg">
-                    <div class="item-title" [style.fontSize]="currentSize.title">{{ 'sidebar.settings' | translate }}</div>
+                    <div class="item-title" [style.fontSize]="currentSize.title">{{ 'sidebar.settings' | translate }}
+                    </div>
                 </div>
                 <div class="item" (click)="toggleView()">
                     <div class="item-img">
@@ -77,7 +82,8 @@
                             <div [style.right]="isDark ? '6px' : '20px'" class="switch-check"></div>
                         </div>
                     </div>
-                    <div class="item-title" [style.fontSize]="currentSize.title">{{ 'sidebar.nightMode' | translate }}</div>
+                    <div class="item-title" [style.fontSize]="currentSize.title">{{ 'sidebar.nightMode' | translate }}
+                    </div>
                 </div>
 
             </div>
@@ -93,13 +99,16 @@
                 <div class="item image">
                     <img [src]="image" alt="image">
                     <div class="upload-btn-wrapper">
-                        <button class="btn" [style.fontSize]="currentSize.text">{{ 'editData.buttonUpload' | translate }}</button>
+                        <button class="btn" [style.fontSize]="currentSize.text">{{ 'editData.buttonUpload' | translate
+                            }}</button>
                         <input type="file" name="image" id="image" (change)="uploadImage($event)">
                     </div>
                 </div>
                 <div class="item">
-                    <label for="userName" [style.fontSize]="currentSize.text">{{ 'editData.userName' | translate }}</label>
-                    <input [(ngModel)]="userName" type="text" name="userName" id="userName" [style.fontSize]="currentSize.text"
+                    <label for="userName" [style.fontSize]="currentSize.text">{{ 'editData.userName' | translate
+                        }}</label>
+                    <input [(ngModel)]="userName" type="text" name="userName" id="userName"
+                        [style.fontSize]="currentSize.text"
                         placeholder="{{ 'editData.userNamePlaceholder' | translate }}">
                 </div>
                 <div class="item">
@@ -109,7 +118,8 @@
                 </div>
             </div>
             <div class="button">
-                <input type="button" value="{{ 'editData.button' | translate }}" [style.fontSize]="currentSize.text" (click)="updateUserData()">
+                <input type="button" value="{{ 'editData.button' | translate }}" [style.fontSize]="currentSize.text"
+                    (click)="updateUserData()">
             </div>
         </div>
     </section>
@@ -124,28 +134,39 @@
                 <p [style.fontSize]="currentSize.text">{{ 'contact.add' | translate }}</p>
             </div>
         </div>
-        <div class="messanger" [style.backgroundImage]="'url('+ backgroundImage + ')'">
+        <div class="messanger" [style.backgroundImage]="'url('+ backgroundImage + ')'" #scroll>
             <div class="messanger-items" *ngFor="let message of messages">
                 <div *ngIf="message.userId !== user.id" class="messanger-items__left">
                     <div class="messanger-items__left--message">
                         <div class="message" id="message{{message.id}}">
-                            <div class="message-text" id="mes{{message.id}}" [style.fontSize]="currentSize.title" [style.fontSize]="currentSize.title">{{ message.message }}</div>
+                            <div *ngIf="message.file?.url" class="message-text box" id="file{{message.id}}">
+                                <div class="document" (click)="downloadFile(message.file)"></div>
+                                <p class="fileName" [style.fontSize]="currentSize.text">{{message?.file?.name}}</p>
+                                <p [style.fontSize]="currentSize.title">{{ message.message }}</p>
+                            </div>
+                            <div *ngIf="!message.file?.url" class="message-text" id="mes{{message.id}}"
+                                [style.fontSize]="currentSize.title" [style.fontSize]="currentSize.title">{{
+                                message.message }}</div>
                             <div class="dots" id="dot{{message.id}}" (click)="openMessageSettings(message.id)"
                                 (clickOutside)="onClickedOutside($event)"></div>
                             <div class="hidden-block">
                                 <div class="settings" id="m{{message.id}}">
-                                    <div class="point" (click)="translateMessage(message.message, message.id)" [style.fontSize]="currentSize.text">{{
+                                    <div class="point" (click)="translateMessage(message.message, message.id)"
+                                        [style.fontSize]="currentSize.text">{{
                                         'settings.translate' | translate }}
                                         <div class="check" id="ch{{message.id}}"></div>
                                     </div>
-                                    <div class="point" (click)="openDialog(message)" [style.fontSize]="currentSize.text">{{ 'settings.delete' | translate }}
+                                    <div class="point" (click)="openDialog(message)"
+                                        [style.fontSize]="currentSize.text">{{ 'settings.delete' | translate }}
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div name="date" *ngIf="isString" class="message-date" [style.fontSize]="currentSize.text">{{ message.date | date: 'dd/MM/YY,
+                        <div name="date" *ngIf="isString" class="message-date" [style.fontSize]="currentSize.text">{{
+                            message.date | date: 'dd/MM/YY,
                             hh:mm a' }}</div>
-                        <div name="date" *ngIf="!isString" class="message-date" [style.fontSize]="currentSize.text">{{ message.date.seconds*1000 |
+                        <div name="date" *ngIf="!isString" class="message-date" [style.fontSize]="currentSize.text">{{
+                            message.date.seconds*1000 |
                             date: 'dd/MM/YY,
                             hh:mm a' }}</div>
                     </div>
@@ -155,24 +176,35 @@
                         <div class="message">
                             <div class="hidden-block">
                                 <div class="settings" id="m{{message.id}}">
-                                    <div class="point" (click)="translateMessage(message.message, message.id)" [style.fontSize]="currentSize.text">{{
+                                    <div class="point" (click)="translateMessage(message.message, message.id)"
+                                        [style.fontSize]="currentSize.text">{{
                                         'settings.translate' | translate }}
                                         <div class="check" id="ch{{message.id}}"></div>
                                     </div>
-                                    <div class="point" (click)="editMessage(message)" [style.fontSize]="currentSize.text">{{ 'settings.edit' | translate }}
+                                    <div class="point" (click)="editMessage(message)"
+                                        [style.fontSize]="currentSize.text">{{ 'settings.edit' | translate }}
                                     </div>
-                                    <div class="point" (click)="openDialog(message)" [style.fontSize]="currentSize.text">{{ 'settings.delete' | translate }}
+                                    <div class="point" (click)="openDialog(message)"
+                                        [style.fontSize]="currentSize.text">{{ 'settings.delete' | translate }}
                                     </div>
                                 </div>
                             </div>
                             <div class="dots" id="dot{{message.id}}" (click)="openMessageSettings(message.id)"
                                 (clickOutside)="onClickedOutside($event)"></div>
-                            <div class="message-text" id="mes{{message.id}}" [style.fontSize]="currentSize.title">{{ message.message }}</div>
+                            <div *ngIf="message.file?.url" class="message-text box" id="file{{message.id}}">
+                                <div class="document" (click)="downloadFile(message.file)"></div>
+                                <p class="fileName" [style.fontSize]="currentSize.text">{{message?.file?.name}}</p>
+                                <p [style.fontSize]="currentSize.title">{{ message.message }}</p>
+                            </div>
+                            <div *ngIf="!message.file?.url" class="message-text" id="mes{{message.id}}"
+                                [style.fontSize]="currentSize.title">{{ message.message }}</div>
                             <div class="editted" *ngIf="message.edited"></div>
                         </div>
-                        <div name="isString" *ngIf="isString" class="message-date" [style.fontSize]="currentSize.text">{{ message.date | date: 'dd/MM/YY,
+                        <div name="isString" *ngIf="isString" class="message-date" [style.fontSize]="currentSize.text">
+                            {{ message.date | date: 'dd/MM/YY,
                             hh:mm a' }}</div>
-                        <div name="!isString" *ngIf="!isString" class="message-date" [style.fontSize]="currentSize.text">{{ message.date.seconds*1000 |
+                        <div name="!isString" *ngIf="!isString" class="message-date"
+                            [style.fontSize]="currentSize.text">{{ message.date.seconds*1000 |
                             date: 'dd/MM/YY,
                             hh:mm a' }}</div>
                     </div>
@@ -191,8 +223,8 @@
                 <input type="file" name="file" id="file" (change)="loadFile($event)">
                 <div class="document"></div>
                 <div *ngIf="urlFile?.url" class="full"></div>
-                <input type="text" id="message" name="message" placeholder="{{ 'text-placeholder' | translate }}" [style.fontSize]="currentSize.text"
-                    [(ngModel)]="message" (keyup.enter)="sendMessage()">
+                <input type="text" id="message" name="message" placeholder="{{ 'text-placeholder' | translate }}"
+                    [style.fontSize]="currentSize.text" [(ngModel)]="message" (keyup.enter)="sendMessage()">
                 <div class="send-icon" (click)="sendMessage()"></div>
             </div>
         </div>

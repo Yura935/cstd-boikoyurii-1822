@@ -3,6 +3,7 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { FontSize } from 'src/app/classes/fontSize.model';
+import { Translation } from 'src/app/classes/translation.model';
 import { IUserData } from 'src/app/interfaces/userData.interface';
 import { DataService } from 'src/app/services/data.service';
 import { ThemeService } from 'src/app/services/theme.service';
@@ -14,8 +15,8 @@ import { ThemeService } from 'src/app/services/theme.service';
 })
 export class SettingsModalComponent implements OnInit {
   openLang: boolean = false;
-  transLang;
-  background: string = '';
+  transLang: Translation;
+  background: string;
   isHover: boolean = false;
   defaultBackground: string = 'https://firebasestorage.googleapis.com/v0/b/clearchat-e1062.appspot.com/o/image%2Fmobile-apps-pattern-260nw-362377472.webp?alt=media&token=3f4cb8a8-6713-43e5-a206-9f5259cf2b65';
   changeLang: boolean = false;
@@ -58,7 +59,7 @@ export class SettingsModalComponent implements OnInit {
   }
 
   changeLanguage(): void {
-    const changeLang = {
+    const changeLang: Translation = {
       from: this.transLang.to,
       to: this.transLang.from,
     }
@@ -67,14 +68,8 @@ export class SettingsModalComponent implements OnInit {
   }
 
   changeToggleLanguage(element): void {
-    if (element.id === 'en') {
-      this.lang = 'en';
-      localStorage.setItem('currentLanguage', JSON.stringify(this.lang));
-    }
-    else {
-      this.lang = 'ua';
-      localStorage.setItem('currentLanguage', JSON.stringify(this.lang));
-    }
+    this.lang = element.id === 'en' ? 'en' : 'ua';
+    localStorage.setItem('currentLanguage', JSON.stringify(this.lang));
   }
 
   toggleLang(): void {

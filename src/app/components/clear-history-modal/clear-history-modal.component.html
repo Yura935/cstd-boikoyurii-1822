@@ -1,11 +1,14 @@
 <h2 [style.fontSize]="currentSize.title">{{ 'clearHistory.title' | translate }}</h2>
 <div class="check">
     <input type="checkbox" name="check" id="check" [checked]="isCheck" (click)="toggleCheck()">
-    <label for="check" [style.fontSize]="currentSize.text">{{ 'clearHistory.check' | translate: {currentUserName: currentUserName} }}</label>
+    <label for="check" [style.fontSize]="currentSize.text">{{ 'clearHistory.check' | translate: {currentUserName:
+        currentUserName} }}</label>
 </div>
 <div class="block">
     <div class="box">
-        <button mat-raised-button color="warn" [style.fontSize]="currentSize.text" (click)="onNoClick()">{{ 'clearHistory.cancel' | translate }}</button>
-        <button mat-raised-button color="primary" [style.fontSize]="currentSize.text" (click)="clear()">{{ 'clearHistory.clear' | translate }}</button>
+        <button mat-raised-button color="warn" [style.fontSize]="currentSize.text" (click)="onNoClick()">{{
+            'clearHistory.cancel' | translate }}</button>
+        <button mat-raised-button color="primary" [style.fontSize]="currentSize.text" (click)="clear()">{{
+            'clearHistory.clear' | translate }}</button>
     </div>
 </div>
