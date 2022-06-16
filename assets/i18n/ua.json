@@ -1,0 +1,71 @@
+{
+    "sidebar": {
+        "settings": "Налаштування",
+        "nightMode": "Темний режим"
+    },
+    "search-placeholder": "Знайти чат...",
+    "contacts": "Чати",
+    "text-placeholder": "Пишіть ваше повідомлення",
+    "editData": {
+        "head": "Редагування даних",
+        "buttonUpload": "Завантажити картинку",
+        "image": "Вибрати файл",
+        "userName": "Ім'я користувача:",
+        "userNamePlaceholder": "Введіть ім'я користувача",
+        "email": "Електронна скринька:",
+        "emailPlaceholder": "Введіть електронну скриньку",
+        "button": "Оновити дані"
+    },
+    "auth": {
+        "headSignIn": "Авторизація",
+        "headSignUp": "Реєстрація",
+        "userName": "Ім'я користувача:",
+        "userNamePlaceholder": "Введіть ім'я користувача",
+        "email": "Електронна скринька:",
+        "emailPlaceholder": "Введіть електронну скриньку",
+        "password": "Пароль:",
+        "passwordPlaceholder": "Введіть пароль",
+        "wantSignIn": "Авторизація",
+        "wantSignUp": "Реєстрація",
+        "signInButton": "Ввійти",
+        "signUpButton": "Зареєструватися"
+    },
+    "contact": {
+        "email": "Електронна скринька:",
+        "send": "Надіслати повідомлення",
+        "add": "Додати до контактів",
+        "clear": "Очистити історію повідомлень"
+    },
+    "others": "Інші користувачі",
+    "settings": {
+        "translate": "Перекласти",
+        "edit": "Змінити",
+        "delete": "Видалити"
+    },
+    "deleteModal": {
+        "title": "Ви хочете видалити це повідомлення?",
+        "check": "Також видалити для {{currentUserName}}",
+        "delete": "Видалити",
+        "cancel": "Скасувати"
+    },
+    "clearHistory": {
+        "title": "Ви хочете очистити історію повідомлень?",
+        "check": "Також очистити для {{currentUserName}}",
+        "clear": "Очистити",
+        "cancel": "Скасувати"
+    },
+    "blockSending": {
+        "warn": "Редагування повідомлення!"
+    },
+    "usersNotFound": "Користувачів з іменем {{name}} не знайдено",
+    "generalSettings": {
+        "title": "Налаштування",
+        "language": "Мова",
+        "translation": "Встановити мову перекладу",
+        "from": "З:",
+        "to": "На:",
+        "background": "Вибрати задній фон",
+        "defaultBackground": "Встановити фон по замовчуванню",
+        "fontSize": "Розмір тексту"
+    }
+}
