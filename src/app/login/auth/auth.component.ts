@@ -10,14 +10,11 @@ import { ThemeService } from 'src/app/services/theme.service';
   styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent implements OnInit {
-  isAuth: boolean = true;
-  authForm: FormGroup;
-  signInForm: FormGroup;
-  userName: string = '';
-  email: string = '';
-  password: string = '';
-  regExpPass = /^[A-Za-z\d+=]{6,30}$/gm;
-  size: FontSize = {
+  public isAuth: boolean = true;
+  public authForm: FormGroup;
+  public signInForm: FormGroup;
+  private regExpPass = /^[A-Za-z\d+=]{6,30}$/gm;
+  private size: FontSize = {
     id: "s2",
     title: "1.4em",
     text: "16px"
@@ -30,11 +27,12 @@ export class AuthComponent implements OnInit {
       userName: this.fb.control('', [Validators.required]),
       email: this.fb.control('', [Validators.required, Validators.email]),
       password: this.fb.control('', [Validators.required, Validators.pattern(this.regExpPass)])
-    })
+    });
     this.signInForm = this.fb.group({
       email: this.fb.control('', [Validators.required, Validators.email]),
       password: this.fb.control('', [Validators.required, , Validators.pattern(this.regExpPass)])
-    })
+    });
+    localStorage.removeItem('contact');
   }
 
   signUp(): void {

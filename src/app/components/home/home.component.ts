@@ -28,7 +28,7 @@ import { Translation } from 'src/app/classes/translation.model';
   styleUrls: ['./home.component.scss']
 })
 
-export class HomeComponent implements OnInit, AfterViewChecked, OnDestroy {
+export class HomeComponent implements OnInit, AfterViewChecked {
   @ViewChild('scroll') private myScrollContainer: ElementRef;
   public left: boolean = false;
   public isDark: boolean;
@@ -180,8 +180,6 @@ export class HomeComponent implements OnInit, AfterViewChecked, OnDestroy {
         })
       }
       if (this.router.url.length > 5) {
-        console.log(1);
-
         this.urlName = this.router.url.slice(6, this.router.url.length);
         if (this.user.contacts.find(el => el.userName === this.urlName)) {
           this.user.contacts.forEach(el => {
@@ -627,14 +625,14 @@ export class HomeComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
-    this.themeService.mainColor.unsubscribe();
-    this.themeService.mainHeadColor.unsubscribe();
-    this.themeService.mainTextColor.unsubscribe();
-    this.themeService.currentElement.unsubscribe();
-    this.themeService.backgroundImage.unsubscribe();
-    this.themeService.fontSize.unsubscribe();
-    this.destroy$.next();
-    this.destroy$.unsubscribe();
-  }
+  // ngOnDestroy(): void {
+  //   this.themeService.mainColor.unsubscribe();
+  //   this.themeService.mainHeadColor.unsubscribe();
+  //   this.themeService.mainTextColor.unsubscribe();
+  //   this.themeService.currentElement.unsubscribe();
+  //   this.themeService.backgroundImage.unsubscribe();
+  //   this.themeService.fontSize.unsubscribe();
+  //   this.destroy$.next();
+  //   this.destroy$.unsubscribe();
+  // }
 }

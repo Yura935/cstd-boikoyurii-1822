@@ -86,7 +86,6 @@ describe('DeleteModalComponent', () => {
       ]
     }
 
-
     fixture.detectChanges();
   });
 

@@ -23,9 +23,9 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'taskChat'`, () => {
+  it(`should have as title 'chatForYou'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('taskChat');
+    expect(app.title).toEqual('chatForYou');
   });
 });

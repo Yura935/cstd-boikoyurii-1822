@@ -2,7 +2,7 @@
   "targets": {
     "clearchat-e1062": {
       "hosting": {
-        "taskChat": [
+        "chatForYou": [
           "clearchat-e1062"
         ]
       }

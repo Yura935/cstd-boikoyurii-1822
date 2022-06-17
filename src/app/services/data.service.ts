@@ -9,9 +9,9 @@ import { IUserData } from '../interfaces/userData.interface';
 })
 
 export class DataService {
-  baseImage = 'assets/icons/user.svg'
+  private baseImage = 'assets/icons/user.svg'
   private dbPath = '/users';
-  userRef: AngularFirestoreCollection<IUserData>;
+  public userRef: AngularFirestoreCollection<IUserData>;
 
   constructor(private db: AngularFirestore, private auth: AngularFireAuth, private router: Router) {
     this.userRef = this.db.collection(this.dbPath);

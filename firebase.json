@@ -1,8 +1,8 @@
 {
   "hosting": [
     {
-      "target": "taskChat",
-      "public": "dist/taskChat",
+      "target": "chatForYou",
+      "public": "dist/chatForYou",
       "ignore": [
         "**/.*"
       ],
