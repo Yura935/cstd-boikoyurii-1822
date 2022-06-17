@@ -221,6 +221,7 @@ main {
       overflow: hidden;
       text-overflow: ellipsis;
       margin-right: 5px;
+      cursor: default;
     }
 
     .edit-block,
@@ -540,6 +541,11 @@ main {
       background-size: cover;
       top: -5px;
       right: -5px;
+    }
+
+    .ed-left{
+      right: 0;
+      left: -5px;
     }
 
     .message-text {

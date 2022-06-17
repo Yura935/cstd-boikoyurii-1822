@@ -114,7 +114,7 @@
                 <div class="item">
                     <label for="email" [style.fontSize]="currentSize.text">{{ 'editData.email' | translate }}</label>
                     <input [(ngModel)]="email" type="email" name="Email" id="email" [style.fontSize]="currentSize.text"
-                        placeholder="{{ 'editData.emailPlaceholder' | translate }}">
+                        placeholder="{{ 'editData.emailPlaceholder' | translate }}" disabled>
                 </div>
             </div>
             <div class="button">
@@ -147,6 +147,7 @@
                             <div *ngIf="!message.file?.url" class="message-text" id="mes{{message.id}}"
                                 [style.fontSize]="currentSize.title" [style.fontSize]="currentSize.title">{{
                                 message.message }}</div>
+                            <div class="editted ed-left" *ngIf="message.edited"></div>
                             <div class="dots" id="dot{{message.id}}" (click)="openMessageSettings(message.id)"
                                 (clickOutside)="onClickedOutside($event)"></div>
                             <div class="hidden-block">

@@ -1,8 +1,8 @@
-import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
-import { debounceTime, map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { debounceTime, map, takeUntil } from 'rxjs/operators';
 import { Contact } from 'src/app/classes/contact.model';
 import { IUserData } from 'src/app/interfaces/userData.interface';
 import { DataService } from 'src/app/services/data.service';
@@ -28,7 +28,7 @@ import { Translation } from 'src/app/classes/translation.model';
   styleUrls: ['./home.component.scss']
 })
 
-export class HomeComponent implements OnInit, AfterViewChecked {
+export class HomeComponent implements OnInit, AfterViewChecked, OnDestroy {
   @ViewChild('scroll') private myScrollContainer: ElementRef;
   public left: boolean = false;
   public isDark: boolean;
@@ -63,6 +63,7 @@ export class HomeComponent implements OnInit, AfterViewChecked {
   backgroundImage: string;
   currentSize: FontSize;
   urlFile: File;
+  destroy$: Subject<any> = new Subject();
 
   constructor(
     private dataService: DataService,
@@ -163,6 +164,7 @@ export class HomeComponent implements OnInit, AfterViewChecked {
         )
       ),
       debounceTime(200),
+      takeUntil(this.destroy$)
     ).subscribe(data => {
       this.allUsers = data;
       this.all = this.allUsers;
@@ -178,6 +180,8 @@ export class HomeComponent implements OnInit, AfterViewChecked {
         })
       }
       if (this.router.url.length > 5) {
+        console.log(1);
+
         this.urlName = this.router.url.slice(6, this.router.url.length);
         if (this.user.contacts.find(el => el.userName === this.urlName)) {
           this.user.contacts.forEach(el => {
@@ -213,13 +217,13 @@ export class HomeComponent implements OnInit, AfterViewChecked {
       }
       else {
         this.currentContact = {
-          userName: this.user.contacts[0]?.userName || this.allUsers[0].userName,
-          image: this.user.contacts[0]?.image || this.allUsers[0].image,
-          email: this.user.contacts[0]?.email || this.allUsers[0].email,
+          userName: this.user.contacts[0]?.userName || this.allUsers[0]?.userName,
+          image: this.user.contacts[0]?.image || this.allUsers[0]?.image,
+          email: this.user.contacts[0]?.email || this.allUsers[0]?.email,
           messages: this.user.contacts[0]?.messages || [],
           lastMessage: this.user.contacts[0]?.lastMessage || null,
           isContact: this.user.contacts[0]?.isContact || false,
-          id: this.user.contacts[0]?.id || this.allUsers[0].id
+          id: this.user.contacts[0]?.id || this.allUsers[0]?.id
         };
         this.urlName = this.currentContact.userName;
         this.router.navigateByUrl(`main/${this.urlName}`);
@@ -326,14 +330,16 @@ export class HomeComponent implements OnInit, AfterViewChecked {
         edited: false
       }
     }
+
     const curContact = {
       userName: this.currentContact.userName,
       image: this.currentContact.image,
       email: this.currentContact.email,
-      contacts: [],
-      backgroundChat: this.themeService.defaultBackground,
+      contacts: this.currentUser.contacts || [],
+      backgroundChat: this.currentUser.backgroundChat || this.themeService.defaultBackground,
       id: this.currentContact.id
     }
+
     const curUser = {
       ...this.user,
       messages: this.currentContact.messages,
@@ -341,6 +347,7 @@ export class HomeComponent implements OnInit, AfterViewChecked {
       isContact: true
     }
     delete curUser.contacts;
+    delete curUser.backgroundChat;
 
     this.user.contacts.push(this.currentContact);
     this.updateInfo(this.user);
@@ -372,9 +379,11 @@ export class HomeComponent implements OnInit, AfterViewChecked {
   translateMessage(sourceText: string, id: string): void {
     if (!this.data[id]) {
       this.data[id] = document.querySelector(`#mes${id}`).textContent;
-      this.getJSON(sourceText, this.transLang.from, this.transLang.to).subscribe((data) => {
-        document.querySelector(`#mes${id}`).textContent = data[0][0][0];
-      });
+      this.getJSON(sourceText, this.transLang.from, this.transLang.to).pipe(
+        takeUntil(this.destroy$))
+        .subscribe((data) => {
+          document.querySelector(`#mes${id}`).textContent = data[0][0][0];
+        });
       (document.querySelector(`#ch${id}`) as HTMLElement).style.display = 'block';
     }
     else {
@@ -468,9 +477,11 @@ export class HomeComponent implements OnInit, AfterViewChecked {
       this.user.contacts.forEach(contact => {
         if (contact.id === this.currentContact.id) {
           contact.messages = this.currentContact.messages;
+          contact.lastMessage = this.currentContact.messages[this.currentContact.messages.length - 1];
           this.currentUser.contacts.forEach(el => {
             if (el.id === this.user.id) {
               el.messages = this.currentContact.messages;
+              el.lastMessage = this.currentContact.messages[this.currentContact.messages.length - 1];
               localStorage.setItem('contact', JSON.stringify(this.currentUser));
             }
           });
@@ -510,9 +521,11 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     const upload = this.storage.upload(filePath, file);
 
     upload.then(image => {
-      this.storage.ref(`image/${image.metadata.name}`).getDownloadURL().subscribe(url => {
-        this.image = url;
-      });
+      this.storage.ref(`image/${image.metadata.name}`).getDownloadURL().pipe(
+        takeUntil(this.destroy$))
+        .subscribe(url => {
+          this.image = url;
+        });
     });
   }
 
@@ -565,6 +578,7 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     const dialogRef = this.dialog.open(SettingsModalComponent, dialogConfig);
     dialogRef
       .afterClosed()
+      .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.transLang = JSON.parse(localStorage.getItem('transLang'));
       });
@@ -583,12 +597,14 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     const upload = this.storage.upload(path, file);
 
     upload.then(file => {
-      this.storage.ref(`files/${file.metadata.name}`).getDownloadURL().subscribe(url => {
-        this.urlFile = {
-          url: url,
-          name: file.metadata.name
-        }
-      })
+      this.storage.ref(`files/${file.metadata.name}`).getDownloadURL().pipe(
+        takeUntil(this.destroy$))
+        .subscribe(url => {
+          this.urlFile = {
+            url: url,
+            name: file.metadata.name
+          }
+        })
     });
   }
 
@@ -611,4 +627,14 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     }
   }
 
+  ngOnDestroy(): void {
+    this.themeService.mainColor.unsubscribe();
+    this.themeService.mainHeadColor.unsubscribe();
+    this.themeService.mainTextColor.unsubscribe();
+    this.themeService.currentElement.unsubscribe();
+    this.themeService.backgroundImage.unsubscribe();
+    this.themeService.fontSize.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.unsubscribe();
+  }
 }

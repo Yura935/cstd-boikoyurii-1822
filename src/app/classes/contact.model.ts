@@ -9,6 +9,7 @@ export class Contact implements IContact {
         public messages: Array<IMessage>,
         public lastMessage: IMessage,
         public isContact: boolean,
-        public id?: string
+        public id?: string,
+        public contacts? : Array<IContact>
     ) { }
 }

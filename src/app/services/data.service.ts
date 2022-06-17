@@ -66,6 +66,7 @@ export class DataService {
       .then(() => {
         localStorage.removeItem('user');
         localStorage.removeItem('contact');
+        localStorage.removeItem('transLang');
         this.router.navigateByUrl('login');
       })
       .catch(err => {

@@ -74,10 +74,14 @@ export class SettingsModalComponent implements OnInit {
 
   toggleLang(): void {
     this.openLang = !this.openLang;
+    this.changeLang = false;
+    this.changeSize = false;
   }
 
   toggleChangeSize(): void {
     this.changeSize = !this.changeSize;
+    this.openLang = false;
+    this.changeLang = false;
   }
 
   uploadImage(event): void {
@@ -115,6 +119,8 @@ export class SettingsModalComponent implements OnInit {
 
   openLangModal(): void {
     this.changeLang = !this.changeLang;
+    this.openLang = false;
+    this.changeSize = false;
   }
 
   setFontSize(event: Event): void {

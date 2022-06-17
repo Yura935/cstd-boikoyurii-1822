@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FontSize } from 'src/app/classes/fontSize.model';
 import { DataService } from 'src/app/services/data.service';
+import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
   selector: 'app-auth',
@@ -15,7 +17,13 @@ export class AuthComponent implements OnInit {
   email: string = '';
   password: string = '';
   regExpPass = /^[A-Za-z\d+=]{6,30}$/gm;
-  constructor(private fb: FormBuilder, private dataService: DataService) { }
+  size: FontSize = {
+    id: "s2",
+    title: "1.4em",
+    text: "16px"
+  };
+
+  constructor(private fb: FormBuilder, private dataService: DataService, private themeService: ThemeService) { }
 
   ngOnInit(): void {
     this.authForm = this.fb.group({
@@ -31,26 +39,14 @@ export class AuthComponent implements OnInit {
 
   signUp(): void {
     this.dataService.signUp(this.authForm.value);
-    const obj = {
-      isDark: false,
-      mainColor: "#fefefe",
-      mainHeadColor: "slategrey",
-      mainTextColor: "#000",
-      currentElement: "url(../../../assets/icons/close.svg)"
-    }
-    localStorage.setItem('theme', JSON.stringify(obj));
+    localStorage.setItem('theme', JSON.stringify(this.themeService.light));
+    localStorage.setItem('fontSize', JSON.stringify(this.size));
   }
 
   signIn(): void {
     this.dataService.signIn(this.signInForm.value);
-    const obj = {
-      isDark: false,
-      mainColor: "#fefefe",
-      mainHeadColor: "slategrey",
-      mainTextColor: "#000",
-      currentElement: "url(../../../assets/icons/close.svg)"
-    }
-    localStorage.setItem('theme', JSON.stringify(obj));
+    localStorage.setItem('theme', JSON.stringify(this.themeService.light));
+    localStorage.setItem('fontSize', JSON.stringify(this.size));
   }
 
   changeChoise(): void {
