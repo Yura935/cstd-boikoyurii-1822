@@ -242,12 +242,13 @@ export class HomeComponent implements OnInit, AfterViewChecked {
   }
 
   updateUserData(): void {
-    const data = {
+    const data: UserData = {
       id: this.user.id,
       userName: this.userName,
       email: this.email,
       image: this.image,
-      contacts: this.user.contacts
+      contacts: this.user.contacts,
+      backgroundChat: this.user.backgroundChat
     }
     this.dataService.update(this.user.id, data);
     this.openEditModal();

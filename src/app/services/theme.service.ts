@@ -19,14 +19,14 @@ export class ThemeService {
     mainColor: "#fefefe",
     mainHeadColor: "slategrey",
     mainTextColor: "#000",
-    currentElement: "url(../../../assets/icons/close.svg)"
+    currentElement: "url(https://firebasestorage.googleapis.com/v0/b/clearchat-e1062.appspot.com/o/image%2Fclose.svg?alt=media&token=3c110e08-0df6-45c3-90ac-912047505c79)"
   };
   public dark: Theme = {
     isDark: true,
     mainColor: "#3C3B3F",
     mainHeadColor: "#141E30",
     mainTextColor: "#fff",
-    currentElement: "url(../../../assets/icons/closeW.svg)"
+    currentElement: "url(https://firebasestorage.googleapis.com/v0/b/clearchat-e1062.appspot.com/o/image%2FcloseW.svg?alt=media&token=3eb7f883-4fc9-4215-8165-fb82a67368ea)"
   }
 
   setMainHeadColor(color: string): void {

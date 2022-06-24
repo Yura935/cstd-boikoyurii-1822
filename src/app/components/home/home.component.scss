@@ -551,7 +551,7 @@ main {
     .message-text {
       max-width: 300px;
       white-space: break-spaces;
-      word-break: break-all;
+      word-break: break-word;
       color: #fff;
       padding: 10px 15px;
     }
@@ -663,7 +663,7 @@ main {
     .close {
       width: 15px;
       height: 15px;
-      background-image: url(../../../assets/icons/close.svg);
+      background-image: url(https://firebasestorage.googleapis.com/v0/b/clearchat-e1062.appspot.com/o/image%2Fclose.svg?alt=media&token=3c110e08-0df6-45c3-90ac-912047505c79);
       background-size: contain;
       position: absolute;
       top: 8px;
