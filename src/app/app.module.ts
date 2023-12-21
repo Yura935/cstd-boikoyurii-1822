@@ -26,6 +26,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { ClearHistoryModalComponent } from './components/clear-history-modal/clear-history-modal.component';
 import { SettingsModalComponent } from './components/settings-modal/settings-modal.component';
 
+import {DEFAULT_CONFIG, NgForageOptions, NgForageConfig, Driver} from 'ngforage';
+
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json?cb=" + new Date().getTime());
 }
@@ -63,7 +65,16 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatDialogModule,
     MatButtonModule
   ],
-  providers: [FilterPipe],
+  providers: [FilterPipe, {
+    provide: DEFAULT_CONFIG,
+    useValue: {
+      name: 'MyApp',
+      driver: [ // defaults to indexedDB -> webSQL -> localStorage
+        Driver.INDEXED_DB,
+        Driver.LOCAL_STORAGE
+      ]
+    } as NgForageOptions
+  }],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

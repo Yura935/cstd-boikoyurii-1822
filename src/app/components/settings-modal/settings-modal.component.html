@@ -1,63 +1,63 @@
-<h2 class="title" [style.fontSize]="currentSize.title">{{ 'generalSettings.title' | translate }}</h2>
+<h2 class="title" [style.fontSize]="currentSize?.title">{{ 'generalSettings.title' | translate }}</h2>
 <div class="settings">
     <div class="item" (click)="toggleLang()">
-        <p class="item-title" [style.fontSize]="currentSize.text">{{ 'generalSettings.translation' | translate }}</p>
+        <p class="item-title" [style.fontSize]="currentSize?.text">{{ 'generalSettings.translation' | translate }}</p>
     </div>
     <div *ngIf="openLang" class="languages">
         <div class="langFrom">
-            <label for="langFrom" [style.fontSize]="currentSize.text">{{ 'generalSettings.from' | translate }}</label>
+            <label for="langFrom" [style.fontSize]="currentSize?.text">{{ 'generalSettings.from' | translate }}</label>
             <input type="text" id="langFrom" [value]="transLang.from" disabled>
         </div>
         <div class="change" (click)="changeLanguage()"></div>
         <div class="langTo">
-            <label for="langTo" [style.fontSize]="currentSize.text">{{ 'generalSettings.to' | translate }}</label>
+            <label for="langTo" [style.fontSize]="currentSize?.text">{{ 'generalSettings.to' | translate }}</label>
             <input type="text" id="langTo" [value]="transLang.to" disabled>
         </div>
     </div>
     <div class="item">
         <div class="btn" [style.backgroundColor]="isHover ? 'rgba(168, 168, 168, 0.28)' : 'white'"
-            [style.fontSize]="currentSize.text">{{ 'generalSettings.background' | translate }}
+            [style.fontSize]="currentSize?.text">{{ 'generalSettings.background' | translate }}
         </div>
         <input type="file" class="backImage" name="backImage" title="" (mouseover)="isHover = true"
             (mouseout)="isHover = false" (change)="uploadImage($event)">
     </div>
     <div class="item" (click)="default()">
-        <p class="item-title" [style.fontSize]="currentSize.text">{{ 'generalSettings.defaultBackground' | translate }}
+        <p class="item-title" [style.fontSize]="currentSize?.text">{{ 'generalSettings.defaultBackground' | translate }}
         </p>
     </div>
     <div class="item" (click)="openLangModal()">
-        <p class="item-title" [style.fontSize]="currentSize.text">{{ 'generalSettings.language' | translate }}</p>
+        <p class="item-title" [style.fontSize]="currentSize?.text">{{ 'generalSettings.language' | translate }}</p>
     </div>
     <div *ngIf="changeLang" class="langItems">
         <div class="item">
             <input type="radio" name="lang" id="en" [checked]="lang === 'en'" (click)="translate.use('en')"
                 (click)="changeToggleLanguage($event.target)">
-            <label for="en" [style.fontSize]="currentSize.text">EN</label>
+            <label for="en" [style.fontSize]="currentSize?.text">EN</label>
         </div>
         <div class="item">
             <input type="radio" name="lang" id="ua" [checked]="lang === 'ua'" (click)="translate.use('ua')"
                 (click)="changeToggleLanguage($event.target)">
-            <label for="ua" [style.fontSize]="currentSize.text">UA</label>
+            <label for="ua" [style.fontSize]="currentSize?.text">UA</label>
         </div>
     </div>
     <div class="item" (click)="toggleChangeSize()">
-        <p class="item-title" [style.fontSize]="currentSize.text">{{ 'generalSettings.fontSize' | translate }}</p>
+        <p class="item-title" [style.fontSize]="currentSize?.text">{{ 'generalSettings.fontSize' | translate }}</p>
     </div>
     <div *ngIf="changeSize" class="sizeItems">
         <div class="box" id="b1">
-            <input type="radio" name="size" id="s1" [checked]="currentSize.title === '1em'"
+            <input type="radio" name="size" id="s1" [checked]="currentSize?.title === '1em'"
                 (click)="setFontSize($event)">
             <label for="s1">S</label>
         </div>
         <div class="line"></div>
         <div class="box" id="b2">
-            <input type="radio" name="size" id="s2" [checked]="currentSize.title === '1.4em'"
+            <input type="radio" name="size" id="s2" [checked]="currentSize?.title === '1.4em'"
                 (click)="setFontSize($event)">
             <label for="s2">M</label>
         </div>
         <div class="line"></div>
         <div class="box" id="b3">
-            <input type="radio" name="size" id="s3" [checked]="currentSize.title === '1.8em'"
+            <input type="radio" name="size" id="s3" [checked]="currentSize?.title === '1.8em'"
                 (click)="setFontSize($event)">
             <label for="s3">L</label>
         </div>

@@ -1,4 +1,10 @@
-import { AfterViewChecked, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewChecked,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subject } from 'rxjs';
@@ -21,13 +27,13 @@ import { UserData } from 'src/app/classes/userData.model';
 import { Message } from 'src/app/classes/message.model';
 import { Theme } from 'src/app/classes/theme.model';
 import { Translation } from 'src/app/classes/translation.model';
+import { NgForage } from 'ngforage';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
-
 export class HomeComponent implements OnInit, AfterViewChecked {
   @ViewChild('scroll') private myScrollContainer: ElementRef;
   public left: boolean = false;
@@ -72,38 +78,30 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     private router: Router,
     public dialog: MatDialog,
     private filter: FilterPipe,
-    private storage: AngularFireStorage) { }
+    private storage: AngularFireStorage,
+    private readonly ngf: NgForage
+  ) {}
 
-  ngOnInit(): void {
-    this.getUserData();
+  async ngOnInit() {
+    await this.getUserData();
     this.getAllUsers();
     this.getThemeElements();
     this.currentUser = JSON.parse(localStorage.getItem('contact'));
-    if (!localStorage.getItem('transLang')) {
-      this.transLang = { from: "en", to: "uk" };
-      localStorage.setItem('transLang', JSON.stringify(this.transLang));
-    }
-    else {
-      this.transLang = JSON.parse(localStorage.getItem('transLang'));
+    this.transLang = await this.ngf.getItem('transLang');
+    if (!this.transLang) {
+      this.transLang = { from: 'en', to: 'uk' };
+      this.ngf.setItem('transLang', this.transLang);
     }
     this.currentSize = JSON.parse(localStorage.getItem('fontSize'));
 
     this.checkFilter();
     this.themeInit();
-    this.themeService.backgroundImage
-      .subscribe(data => {
-        if (data) {
-          this.backgroundImage = data;
-        }
-      });
-    if (!localStorage.getItem('currentLanguage')) {
-      localStorage.setItem('currentLanguage', JSON.stringify(this.lang));
-    }
-    else {
-      this.lang = JSON.parse(localStorage.getItem('currentLanguage'));
-      this.translate.use(this.lang);
-    }
-    this.themeService.fontSize.subscribe(data => {
+    this.themeService.backgroundImage.subscribe((data) => {
+      if (data) {
+        this.backgroundImage = data;
+      }
+    });
+    this.themeService.fontSize.subscribe((data) => {
       if (data) {
         this.currentSize = data;
       }
@@ -124,14 +122,20 @@ export class HomeComponent implements OnInit, AfterViewChecked {
   }
 
   getThemeElements(): void {
-    this.themeService.mainColor.subscribe(data => this.bgColor = data);
-    this.themeService.mainHeadColor.subscribe(data => this.bgColorHead = data);
-    this.themeService.mainTextColor.subscribe(data => this.textColor = data);
-    this.themeService.currentElement.subscribe(data => this.currentElement = data);
+    this.themeService.mainColor.subscribe((data) => (this.bgColor = data));
+    this.themeService.mainHeadColor.subscribe(
+      (data) => (this.bgColorHead = data)
+    );
+    this.themeService.mainTextColor.subscribe(
+      (data) => (this.textColor = data)
+    );
+    this.themeService.currentElement.subscribe(
+      (data) => (this.currentElement = data)
+    );
   }
 
   openUserInfo(): void {
-    this.isClick === 'none' ? this.isClick = 'flex' : this.isClick = 'none';
+    this.isClick === 'none' ? (this.isClick = 'flex') : (this.isClick = 'none');
   }
 
   toggleSidebar(): void {
@@ -148,97 +152,109 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     this.themeService.setCurrentElement(this.theme.currentElement);
   }
 
-  getUserData(): void {
-    if (localStorage.getItem('user')) {
-      this.user = JSON.parse(localStorage.getItem('user'));
-      this.backgroundImage = this.user.backgroundChat;
-      this.image = this.user.image;
-    }
+  async getUserData() {
+    this.user = await this.ngf.getItem('user');
+    this.backgroundImage = this.user.backgroundChat;
+    this.image = this.user.image;
   }
 
   getAllUsers(): void {
-    this.dataService.getAll().snapshotChanges().pipe(
-      map(changes =>
-        changes.map(c =>
-          ({ id: c.payload.doc.id, ...c.payload.doc.data() })
-        )
-      ),
-      debounceTime(200),
-      takeUntil(this.destroy$)
-    ).subscribe(data => {
-      this.allUsers = data;
-      this.all = this.allUsers;
-      this.user = this.allUsers.find(el => el.id === this.user.id);
-      this.allUsers = this.allUsers.filter(el => el.id !== this.user.id);
-      if (this.user.contacts) {
-        this.user.contacts.forEach(elem => {
-          this.allUsers = this.allUsers.filter(el => {
-            if (el.id !== elem.id) {
-              return el;
+    this.dataService
+      .getAll()
+      .snapshotChanges()
+      .pipe(
+        map((changes) =>
+          changes.map((c) => ({
+            id: c.payload.doc.id,
+            ...c.payload.doc.data(),
+          }))
+        ),
+        debounceTime(200),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(
+        (data) => {
+          this.allUsers = data;
+          this.all = this.allUsers;
+          this.user = this.allUsers.find((el) => el.id === this.user.id);
+          this.allUsers = this.allUsers.filter((el) => el.id !== this.user.id);
+          if (this.user.contacts) {
+            this.user.contacts.forEach((elem) => {
+              this.allUsers = this.allUsers.filter((el) => {
+                if (el.id !== elem.id) {
+                  return el;
+                }
+              });
+            });
+          }
+          if (this.router.url.length > 5) {
+            this.urlName = this.router.url.slice(6, this.router.url.length);
+            if (this.user.contacts.find((el) => el.userName === this.urlName)) {
+              this.user.contacts.forEach((el) => {
+                if (el.userName === this.urlName) {
+                  this.currentContact = {
+                    userName: el.userName,
+                    image: el.image,
+                    email: el.email,
+                    messages: el.messages,
+                    lastMessage: el.lastMessage,
+                    isContact: el.isContact,
+                    id: el.id,
+                  };
+                }
+              });
+            } else {
+              const elem = this.allUsers.find(
+                (el) => el.userName === this.urlName
+              );
+              this.allUsers.forEach((el) => {
+                if (el.userName === this.urlName) {
+                  this.currentContact = {
+                    userName: elem.userName,
+                    image: elem.image,
+                    email: elem.email,
+                    messages: [],
+                    lastMessage: null,
+                    isContact: false,
+                    id: elem.id,
+                  };
+                }
+              });
             }
-          })
-        })
-      }
-      if (this.router.url.length > 5) {
-        this.urlName = this.router.url.slice(6, this.router.url.length);
-        if (this.user.contacts.find(el => el.userName === this.urlName)) {
-          this.user.contacts.forEach(el => {
-            if (el.userName === this.urlName) {
-              this.currentContact = {
-                userName: el.userName,
-                image: el.image,
-                email: el.email,
-                messages: el.messages,
-                lastMessage: el.lastMessage,
-                isContact: el.isContact,
-                id: el.id
-              };
-            }
-          })
-        }
-        else {
-          const elem = this.allUsers.find(el => el.userName === this.urlName)
-          this.allUsers.forEach(el => {
-            if (el.userName === this.urlName) {
-              this.currentContact = {
-                userName: elem.userName,
-                image: elem.image,
-                email: elem.email,
-                messages: [],
-                lastMessage: null,
-                isContact: false,
-                id: elem.id
-              };
+          } else {
+            this.currentContact = {
+              userName:
+                this.user.contacts[0]?.userName || this.allUsers[0]?.userName,
+              image: this.user.contacts[0]?.image || this.allUsers[0]?.image,
+              email: this.user.contacts[0]?.email || this.allUsers[0]?.email,
+              messages: this.user.contacts[0]?.messages || [],
+              lastMessage: this.user.contacts[0]?.lastMessage || null,
+              isContact: this.user.contacts[0]?.isContact || false,
+              id: this.user.contacts[0]?.id || this.allUsers[0]?.id,
+            };
+            this.urlName = this.currentContact.userName;
+            this.router.navigateByUrl(`main/${this.urlName}`);
+          }
+          this.isContact = this.currentContact.isContact;
+          this.messages =
+            this.user.contacts.find((el) => el.id === this.currentContact.id)
+              ?.messages || [];
+          this.isString = typeof this.messages[0]?.date === 'string';
+          this.all.forEach((contact) => {
+            if (contact.id === this.currentContact.id) {
+              this.currentUser = contact;
+              localStorage.setItem('contact', JSON.stringify(this.currentUser));
             }
           });
+          this.currentMessageId =
+            this.messages.length >= 1
+              ? this.messages[this.messages.length - 1]?.id + 1
+              : 0;
+        },
+        (e) => {
+          alert(e);
         }
-      }
-      else {
-        this.currentContact = {
-          userName: this.user.contacts[0]?.userName || this.allUsers[0]?.userName,
-          image: this.user.contacts[0]?.image || this.allUsers[0]?.image,
-          email: this.user.contacts[0]?.email || this.allUsers[0]?.email,
-          messages: this.user.contacts[0]?.messages || [],
-          lastMessage: this.user.contacts[0]?.lastMessage || null,
-          isContact: this.user.contacts[0]?.isContact || false,
-          id: this.user.contacts[0]?.id || this.allUsers[0]?.id
-        };
-        this.urlName = this.currentContact.userName;
-        this.router.navigateByUrl(`main/${this.urlName}`);
-      }
-      this.isContact = this.currentContact.isContact;
-      this.messages = this.user.contacts.find(el => el.id === this.currentContact.id)?.messages || [];
-      this.isString = typeof this.messages[0]?.date === 'string';
-      this.all.forEach(contact => {
-        if (contact.id === this.currentContact.id) {
-          this.currentUser = contact;
-          localStorage.setItem('contact', JSON.stringify(this.currentUser));
-        }
-      });
-      this.currentMessageId = this.messages.length >= 1 ? this.messages[this.messages.length - 1]?.id + 1 : 0;
-    }, (e) => {
-      alert(e);
-    });
+      );
   }
 
   updateUserData(): void {
@@ -248,8 +264,8 @@ export class HomeComponent implements OnInit, AfterViewChecked {
       email: this.email,
       image: this.image,
       contacts: this.user.contacts,
-      backgroundChat: this.user.backgroundChat
-    }
+      backgroundChat: this.user.backgroundChat,
+    };
     this.dataService.update(this.user.id, data);
     this.openEditModal();
     localStorage.setItem('user', JSON.stringify(data));
@@ -262,16 +278,18 @@ export class HomeComponent implements OnInit, AfterViewChecked {
 
   openEditModal(): void {
     this.left = false;
-    this.display === "none" ? this.display = "flex" : this.display = "none";
+    this.display === 'none' ? (this.display = 'flex') : (this.display = 'none');
     this.userName = this.user.userName;
     this.email = this.user.email;
     this.image = this.user.image;
   }
 
   chooseContact(event): void {
-    const contact = this.user.contacts.find(el => el.id === event.currentTarget.id);
+    const contact = this.user.contacts.find(
+      (el) => el.id === event.currentTarget.id
+    );
     if (contact) {
-      this.user.contacts.forEach(el => {
+      this.user.contacts.forEach((el) => {
         if (el.id === event.currentTarget.id) {
           this.currentContact = {
             userName: el.userName,
@@ -280,14 +298,15 @@ export class HomeComponent implements OnInit, AfterViewChecked {
             messages: el.messages,
             lastMessage: el.lastMessage,
             isContact: el.isContact,
-            id: el.id
+            id: el.id,
           };
         }
-      })
-    }
-    else {
-      const contact = this.allUsers.find(el => el.id === event.currentTarget.id);
-      this.allUsers.forEach(el => {
+      });
+    } else {
+      const contact = this.allUsers.find(
+        (el) => el.id === event.currentTarget.id
+      );
+      this.allUsers.forEach((el) => {
         if (el.id === event.currentTarget.id) {
           this.currentContact = {
             userName: contact.userName,
@@ -296,26 +315,34 @@ export class HomeComponent implements OnInit, AfterViewChecked {
             messages: [],
             lastMessage: null,
             isContact: false,
-            id: contact.id
+            id: contact.id,
           };
         }
       });
     }
     this.isContact = this.currentContact.isContact;
-    this.messages = this.user.contacts.find(el => el.id === this.currentContact.id)?.messages || [];
-    this.isString = typeof this.messages[0]?.date === 'string'
-    this.all.forEach(contact => {
+    this.messages =
+      this.user.contacts.find((el) => el.id === this.currentContact.id)
+        ?.messages || [];
+    this.isString = typeof this.messages[0]?.date === 'string';
+    this.all.forEach((contact) => {
       if (contact.id === this.currentContact.id) {
         this.currentUser = contact;
         localStorage.setItem('contact', JSON.stringify(this.currentUser));
       }
     });
-    this.currentMessageId = this.messages.length >= 1 ? this.messages[this.messages.length - 1]?.id + 1 : 0;
+    this.currentMessageId =
+      this.messages.length >= 1
+        ? this.messages[this.messages.length - 1]?.id + 1
+        : 0;
   }
 
   addContact(): void {
     this.currentContact.isContact = true;
-    if (this.currentContact.messages.length == 0 && !this.currentContact.lastMessage) {
+    if (
+      this.currentContact.messages.length == 0 &&
+      !this.currentContact.lastMessage
+    ) {
       this.currentContact.messages = [];
       this.currentContact.lastMessage = {
         id: 0,
@@ -324,10 +351,10 @@ export class HomeComponent implements OnInit, AfterViewChecked {
         date: null,
         file: {
           url: '',
-          name: ''
+          name: '',
         },
-        edited: false
-      }
+        edited: false,
+      };
     }
 
     const curContact = {
@@ -335,16 +362,17 @@ export class HomeComponent implements OnInit, AfterViewChecked {
       image: this.currentContact.image,
       email: this.currentContact.email,
       contacts: this.currentUser.contacts || [],
-      backgroundChat: this.currentUser.backgroundChat || this.themeService.defaultBackground,
-      id: this.currentContact.id
-    }
+      backgroundChat:
+        this.currentUser.backgroundChat || this.themeService.defaultBackground,
+      id: this.currentContact.id,
+    };
 
     const curUser = {
       ...this.user,
       messages: this.currentContact.messages,
       lastMessage: this.currentContact.lastMessage,
-      isContact: true
-    }
+      isContact: true,
+    };
     delete curUser.contacts;
     delete curUser.backgroundChat;
 
@@ -363,14 +391,13 @@ export class HomeComponent implements OnInit, AfterViewChecked {
       email: user.email,
       image: user.image,
       backgroundChat: user.backgroundChat,
-      contacts: user.contacts || []
-    }
+      contacts: user.contacts || [],
+    };
 
     this.dataService.update(user.id, data);
     if (user.id == this.user.id) {
       localStorage.setItem('user', JSON.stringify(data));
-    }
-    else {
+    } else {
       localStorage.setItem('contact', JSON.stringify(data));
     }
   }
@@ -378,22 +405,30 @@ export class HomeComponent implements OnInit, AfterViewChecked {
   translateMessage(sourceText: string, id: string): void {
     if (!this.data[id]) {
       this.data[id] = document.querySelector(`#mes${id}`).textContent;
-      this.getJSON(sourceText, this.transLang.from, this.transLang.to).pipe(
-        takeUntil(this.destroy$))
+      this.getJSON(sourceText, this.transLang.from, this.transLang.to)
+        .pipe(takeUntil(this.destroy$))
         .subscribe((data) => {
           document.querySelector(`#mes${id}`).textContent = data[0][0][0];
         });
-      (document.querySelector(`#ch${id}`) as HTMLElement).style.display = 'block';
-    }
-    else {
+      (document.querySelector(`#ch${id}`) as HTMLElement).style.display =
+        'block';
+    } else {
       document.querySelector(`#mes${id}`).textContent = this.data[id];
-      (document.querySelector(`#ch${id}`) as HTMLElement).style.display = 'none';
+      (document.querySelector(`#ch${id}`) as HTMLElement).style.display =
+        'none';
       this.data[id] = '';
     }
   }
 
-  public getJSON(sourceText: string, langFrom: string, langTo: string): Observable<any> {
-    return ajax.getJSON(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${langFrom}&tl=${langTo}&dt=t&q=` + encodeURI(sourceText));
+  public getJSON(
+    sourceText: string,
+    langFrom: string,
+    langTo: string
+  ): Observable<any> {
+    return ajax.getJSON(
+      `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${langFrom}&tl=${langTo}&dt=t&q=` +
+        encodeURI(sourceText)
+    );
   }
 
   sendMessage(): void {
@@ -407,31 +442,32 @@ export class HomeComponent implements OnInit, AfterViewChecked {
           message: this.message || '',
           date: new Date(),
           file: this.urlFile || { url: '', name: '' },
-          edited: false
+          edited: false,
         };
 
         this.currentContact.messages.push(mess);
         this.currentContact.lastMessage = mess;
 
         if (this.user.contacts.length > 0) {
-          this.user.contacts.forEach(contact => {
+          this.user.contacts.forEach((contact) => {
             if (contact.id === this.currentContact.id) {
               contact.messages = this.currentContact.messages;
               contact.lastMessage = this.currentContact.lastMessage;
-              this.currentUser.contacts.forEach(el => {
+              this.currentUser.contacts.forEach((el) => {
                 if (el.id === this.user.id) {
                   el.messages = this.currentContact.messages;
                   el.lastMessage = this.currentContact.lastMessage;
-                  localStorage.setItem('contact', JSON.stringify(this.currentUser));
+                  localStorage.setItem(
+                    'contact',
+                    JSON.stringify(this.currentUser)
+                  );
                 }
               });
+            } else {
+              count++;
             }
-            else {
-              count++
-            }
-          })
-        }
-        else {
+          });
+        } else {
           count = all;
         }
         const contact = JSON.parse(localStorage.getItem('contact'));
@@ -442,17 +478,17 @@ export class HomeComponent implements OnInit, AfterViewChecked {
             email: this.currentContact.email,
             contacts: contact.contacts,
             backgroundChat: this.themeService.defaultBackground,
-            id: this.currentContact.id
-          }
+            id: this.currentContact.id,
+          };
         }
         if (count == all) {
           this.addContact();
-          this.user.contacts.forEach(contact => {
+          this.user.contacts.forEach((contact) => {
             if (contact.id === this.currentContact.id) {
               contact.messages = this.currentContact.messages;
               contact.lastMessage = this.currentContact.lastMessage;
             }
-          })
+          });
         }
         this.updateInfo(this.user);
         this.updateInfo(this.currentUser);
@@ -460,27 +496,32 @@ export class HomeComponent implements OnInit, AfterViewChecked {
         this.currentMessageId++;
         this.urlFile = {
           url: '',
-          name: ''
-        }
+          name: '',
+        };
       }
-    }
-    else {
-      this.messages.forEach(el => {
+    } else {
+      this.messages.forEach((el) => {
         if (el.id === +this.currentMessageIDHTML) {
           el.message = this.message;
           el.edited = true;
         }
-      })
+      });
 
       this.currentContact.messages = this.messages;
-      this.user.contacts.forEach(contact => {
+      this.user.contacts.forEach((contact) => {
         if (contact.id === this.currentContact.id) {
           contact.messages = this.currentContact.messages;
-          contact.lastMessage = this.currentContact.messages[this.currentContact.messages.length - 1];
-          this.currentUser.contacts.forEach(el => {
+          contact.lastMessage =
+            this.currentContact.messages[
+              this.currentContact.messages.length - 1
+            ];
+          this.currentUser.contacts.forEach((el) => {
             if (el.id === this.user.id) {
               el.messages = this.currentContact.messages;
-              el.lastMessage = this.currentContact.messages[this.currentContact.messages.length - 1];
+              el.lastMessage =
+                this.currentContact.messages[
+                  this.currentContact.messages.length - 1
+                ];
               localStorage.setItem('contact', JSON.stringify(this.currentUser));
             }
           });
@@ -494,11 +535,16 @@ export class HomeComponent implements OnInit, AfterViewChecked {
   }
 
   openMessageSettings(id: string): void {
-    if ((document.querySelector(`#m${id}`) as HTMLElement).style.visibility === "unset") {
-      (document.querySelector(`#m${id}`) as HTMLElement).style.visibility = "hidden";
+    if (
+      (document.querySelector(`#m${id}`) as HTMLElement).style.visibility ===
+      'unset'
+    ) {
+      (document.querySelector(`#m${id}`) as HTMLElement).style.visibility =
+        'hidden';
     } else {
       this.currentMessageIDHTML = `${id}`;
-      (document.querySelector(`#m${id}`) as HTMLElement).style.visibility = "unset";
+      (document.querySelector(`#m${id}`) as HTMLElement).style.visibility =
+        'unset';
       const elements = document.getElementsByClassName('settings');
       for (let i = 0; i < elements.length; i++) {
         if (i != +this.currentMessageIDHTML) {
@@ -509,8 +555,14 @@ export class HomeComponent implements OnInit, AfterViewChecked {
   }
 
   onClickedOutside(e: Event): void {
-    if (e.target !== document.querySelector(`#dot${this.currentMessageIDHTML}`) && this.currentMessageIDHTML && document.querySelector(`#m${this.currentMessageIDHTML}`)) {
-      (document.querySelector(`#m${this.currentMessageIDHTML}`) as HTMLElement).style.visibility = "hidden";
+    if (
+      e.target !== document.querySelector(`#dot${this.currentMessageIDHTML}`) &&
+      this.currentMessageIDHTML &&
+      document.querySelector(`#m${this.currentMessageIDHTML}`)
+    ) {
+      (
+        document.querySelector(`#m${this.currentMessageIDHTML}`) as HTMLElement
+      ).style.visibility = 'hidden';
     }
   }
 
@@ -519,10 +571,12 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     const filePath = `image/${file.name}`;
     const upload = this.storage.upload(filePath, file);
 
-    upload.then(image => {
-      this.storage.ref(`image/${image.metadata.name}`).getDownloadURL().pipe(
-        takeUntil(this.destroy$))
-        .subscribe(url => {
+    upload.then((image) => {
+      this.storage
+        .ref(`image/${image.metadata.name}`)
+        .getDownloadURL()
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((url) => {
           this.image = url;
         });
     });
@@ -549,8 +603,8 @@ export class HomeComponent implements OnInit, AfterViewChecked {
       messages: this.messages,
       myUser: this.user,
       updateInfo: this.updateInfo,
-      lastMessage: this.messages[this.messages.length - 1]
-    }
+      lastMessage: this.messages[this.messages.length - 1],
+    };
     this.dialog.open(DeleteModalComponent, dialogConfig);
   }
 
@@ -561,8 +615,8 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     dialogConfig.data = {
       user: this.currentUser,
       myUser: this.user,
-      updateInfo: this.updateInfo
-    }
+      updateInfo: this.updateInfo,
+    };
     this.dialog.open(ClearHistoryModalComponent, dialogConfig);
     this.openUserInfo();
   }
@@ -573,7 +627,7 @@ export class HomeComponent implements OnInit, AfterViewChecked {
 
     dialogConfig.data = {
       myUser: this.user,
-    }
+    };
     const dialogRef = this.dialog.open(SettingsModalComponent, dialogConfig);
     dialogRef
       .afterClosed()
@@ -585,7 +639,10 @@ export class HomeComponent implements OnInit, AfterViewChecked {
   }
 
   checkFilter(): number {
-    return this.filter.transform(this.user.contacts, this.search).length || this.filter.transform(this.allUsers, this.search).length;
+    return (
+      this.filter.transform(this.user?.contacts, this.search).length ||
+      this.filter.transform(this.allUsers, this.search).length
+    );
   }
 
   loadFile(event): void {
@@ -595,15 +652,17 @@ export class HomeComponent implements OnInit, AfterViewChecked {
     const path = `files/${file.name}`;
     const upload = this.storage.upload(path, file);
 
-    upload.then(file => {
-      this.storage.ref(`files/${file.metadata.name}`).getDownloadURL().pipe(
-        takeUntil(this.destroy$))
-        .subscribe(url => {
+    upload.then((file) => {
+      this.storage
+        .ref(`files/${file.metadata.name}`)
+        .getDownloadURL()
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((url) => {
           this.urlFile = {
             url: url,
-            name: file.metadata.name
-          }
-        })
+            name: file.metadata.name,
+          };
+        });
     });
   }
 
@@ -620,20 +679,10 @@ export class HomeComponent implements OnInit, AfterViewChecked {
 
   scrollToBottom(): void {
     try {
-      this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+      this.myScrollContainer.nativeElement.scrollTop =
+        this.myScrollContainer.nativeElement.scrollHeight;
     } catch (err) {
       alert(err);
     }
   }
-
-  // ngOnDestroy(): void {
-  //   this.themeService.mainColor.unsubscribe();
-  //   this.themeService.mainHeadColor.unsubscribe();
-  //   this.themeService.mainTextColor.unsubscribe();
-  //   this.themeService.currentElement.unsubscribe();
-  //   this.themeService.backgroundImage.unsubscribe();
-  //   this.themeService.fontSize.unsubscribe();
-  //   this.destroy$.next();
-  //   this.destroy$.unsubscribe();
-  // }
 }

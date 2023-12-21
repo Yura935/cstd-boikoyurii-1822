@@ -64,7 +64,7 @@ describe('AuthComponent', () => {
   })
 
   it('should change isAuth', () => {
-    component.changeChoise();
+    component.changeChoice();
     expect(component.isAuth).toBeFalse();
   })
 });

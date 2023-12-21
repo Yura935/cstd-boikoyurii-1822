@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
+import { NgForage } from 'ngforage';
 import { FontSize } from 'src/app/classes/fontSize.model';
 import { Translation } from 'src/app/classes/translation.model';
 import { IUserData } from 'src/app/interfaces/userData.interface';
@@ -11,49 +12,52 @@ import { ThemeService } from 'src/app/services/theme.service';
 @Component({
   selector: 'app-settings-modal',
   templateUrl: './settings-modal.component.html',
-  styleUrls: ['./settings-modal.component.scss']
+  styleUrls: ['./settings-modal.component.scss'],
 })
 export class SettingsModalComponent implements OnInit {
   openLang: boolean = false;
   transLang: Translation;
   background: string;
   isHover: boolean = false;
-  defaultBackground: string = 'https://firebasestorage.googleapis.com/v0/b/clearchat-e1062.appspot.com/o/image%2Fmobile-apps-pattern-260nw-362377472.webp?alt=media&token=3f4cb8a8-6713-43e5-a206-9f5259cf2b65';
+  defaultBackground: string =
+    'https://firebasestorage.googleapis.com/v0/b/clearchat-e1062.appspot.com/o/image%2Fmobile-apps-pattern-260nw-362377472.webp?alt=media&token=3f4cb8a8-6713-43e5-a206-9f5259cf2b65';
   changeLang: boolean = false;
   changeSize: boolean = false;
   lang: string = 'en';
   sizes: Array<FontSize> = [
     {
-      id: "s1",
-      title: "1em",
-      text: "12px"
+      id: 's1',
+      title: '1em',
+      text: '12px',
     },
     {
-      id: "s2",
-      title: "1.4em",
-      text: "16px"
+      id: 's2',
+      title: '1.4em',
+      text: '16px',
     },
     {
-      id: "s3",
-      title: "1.8em",
-      text: "18px"
-    }
+      id: 's3',
+      title: '1.8em',
+      text: '18px',
+    },
   ];
   currentSize: FontSize;
 
-  constructor
-    (public dialogRef: MatDialogRef<SettingsModalComponent>,
-      private dataService: DataService,
-      private themeService: ThemeService,
-      private storage: AngularFireStorage,
-      private translate: TranslateService,
-      @Inject(MAT_DIALOG_DATA)
-      public data: {
-        myUser: IUserData
-      }) { }
+  constructor(
+    public dialogRef: MatDialogRef<SettingsModalComponent>,
+    private dataService: DataService,
+    private themeService: ThemeService,
+    private storage: AngularFireStorage,
+    private translate: TranslateService,
+    @Inject(MAT_DIALOG_DATA)
+    public data: {
+      myUser: IUserData;
+    },
+    private readonly ngf: NgForage
+  ) {}
 
-  ngOnInit(): void {
-    this.transLang = JSON.parse(localStorage.getItem('transLang'));
+  async ngOnInit() {
+    this.transLang = await this.ngf.getItem('transLang');
     this.lang = JSON.parse(localStorage.getItem('currentLanguage'));
     this.currentSize = JSON.parse(localStorage.getItem('fontSize'));
   }
@@ -62,9 +66,9 @@ export class SettingsModalComponent implements OnInit {
     const changeLang: Translation = {
       from: this.transLang.to,
       to: this.transLang.from,
-    }
+    };
     this.transLang = changeLang;
-    localStorage.setItem('transLang', JSON.stringify(changeLang));
+    this.ngf.setItem('transLang', this.transLang);
   }
 
   changeToggleLanguage(element): void {
@@ -89,28 +93,31 @@ export class SettingsModalComponent implements OnInit {
     const filePath = `image/${file.name}`;
     const upload = this.storage.upload(filePath, file);
 
-    upload.then(image => {
-      this.storage.ref(`image/${image.metadata.name}`).getDownloadURL().subscribe(url => {
-        this.background = url;
-        this.themeService.backgroundImage.next(this.background);
+    upload.then((image) => {
+      this.storage
+        .ref(`image/${image.metadata.name}`)
+        .getDownloadURL()
+        .subscribe((url) => {
+          this.background = url;
+          this.themeService.backgroundImage.next(this.background);
 
-        const user = {
-          ...this.data.myUser,
-          backgroundChat: this.background
-        };
-        this.dataService.update(this.data.myUser.id, user);
-        localStorage.setItem('user', JSON.stringify(user));
-      });
+          const user = {
+            ...this.data.myUser,
+            backgroundChat: this.background,
+          };
+          this.dataService.update(this.data.myUser.id, user);
+          localStorage.setItem('user', JSON.stringify(user));
+        });
     });
 
     event.target.value = '';
-  };
+  }
 
   default(): void {
     this.themeService.backgroundImage.next(this.defaultBackground);
     const user = {
       ...this.data.myUser,
-      backgroundChat: this.defaultBackground
+      backgroundChat: this.defaultBackground,
     };
 
     this.dataService.update(this.data.myUser.id, user);
@@ -124,11 +131,11 @@ export class SettingsModalComponent implements OnInit {
   }
 
   setFontSize(event: Event): void {
-    this.sizes.forEach(el => {
+    this.sizes.forEach((el) => {
       if (el.id === (event.target as HTMLElement).id) {
         this.currentSize = el;
       }
-    })
+    });
     localStorage.setItem('fontSize', JSON.stringify(this.currentSize));
     this.themeService.setFontSize(this.currentSize);
   }
