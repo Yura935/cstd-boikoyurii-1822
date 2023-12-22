@@ -1,71 +1,76 @@
 {
-    "sidebar": {
-        "settings": "Settings",
-        "nightMode": "Night Mode"
-    },
-    "search-placeholder": "Search chat...",
-    "contacts": "Chats",
-    "text-placeholder": "Type your message...",
-    "editData": {
-        "head": "Edit data",
-        "buttonUpload": "Upload image",
-        "image": "Choose file",
-        "userName": "Username:",
-        "userNamePlaceholder": "Type username...",
-        "email": "Email:",
-        "emailPlaceholder": "Type email...",
-        "button": "Update data"
-    },
-    "auth": {
-        "headSignIn": "Authorization",
-        "headSignUp": "Registration",
-        "userName": "Username:",
-        "userNamePlaceholder": "Type username...",
-        "email": "Email:",
-        "emailPlaceholder": "Type email...",
-        "password": "Password:",
-        "passwordPlaceholder": "Type password...",
-        "wantSignIn": "Authorization",
-        "wantSignUp": "Registration",
-        "signInButton": "Sign In",
-        "signUpButton": "Sign Up"
-    },
-    "contact": {
-        "email": "Email:",
-        "send": "Send message",
-        "add": "Add to contacts",
-        "clear": "Clear message history"
-    },
-    "others": "Other users",
-    "settings": {
-        "translate": "Translate",
-        "edit": "Edit",
-        "delete": "Delete"
-    },
-    "deleteModal": {
-        "title": "Do you want to delete this message?",
-        "check": "Also delete for {{currentUserName}}",
-        "delete": "Delete",
-        "cancel": "Cancel"
-    },
-    "clearHistory": {
-        "title": "Do you want to clear message history?",
-        "check": "Also clear for {{currentUserName}}",
-        "clear": "Clear",
-        "cancel": "Cancel"
-    },
-    "blockSending": {
-        "warn": "Edit message!"
-    },
-    "usersNotFound": "Users with name {{name}} not found",
-    "generalSettings": {
-        "title": "Settings",
-        "language": "Language",
-        "translation": "Set language translation",
-        "from": "From:",
-        "to": "To:",
-        "background": "Choose background",
-        "defaultBackground": "Set default background",
-        "fontSize": "Font Size"
+  "sidebar": {
+    "settings": "Settings",
+    "nightMode": "Night Mode"
+  },
+  "search-placeholder": "Search chat...",
+  "contacts": "Chats",
+  "text-placeholder": "Type your message...",
+  "editData": {
+    "head": "Edit data",
+    "buttonUpload": "Upload image",
+    "image": "Choose file",
+    "userName": "Username:",
+    "userNamePlaceholder": "Type username...",
+    "email": "Email:",
+    "emailPlaceholder": "Type email...",
+    "button": "Update data"
+  },
+  "auth": {
+    "headSignIn": "Authorization",
+    "headSignUp": "Registration",
+    "userName": "Username:",
+    "userNamePlaceholder": "Type username...",
+    "email": "Email:",
+    "emailPlaceholder": "Type email...",
+    "password": "Password:",
+    "passwordPlaceholder": "Type password...",
+    "confirmPassword": "Confirm Password:",
+    "confirmPasswordPlaceholder": "Please re-enter your password",
+    "wantSignIn": "Authorization",
+    "wantSignUp": "Registration",
+    "signInButton": "Sign In",
+    "signUpButton": "Sign Up",
+    "validation": {
+      "required": "This filed is required"
     }
+  },
+  "contact": {
+    "email": "Email:",
+    "send": "Send message",
+    "add": "Add to contacts",
+    "clear": "Clear message history"
+  },
+  "others": "Other users",
+  "settings": {
+    "translate": "Translate",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "deleteModal": {
+    "title": "Do you want to delete this message?",
+    "check": "Also delete for {{currentUserName}}",
+    "delete": "Delete",
+    "cancel": "Cancel"
+  },
+  "clearHistory": {
+    "title": "Do you want to clear message history?",
+    "check": "Also clear for {{currentUserName}}",
+    "clear": "Clear",
+    "cancel": "Cancel"
+  },
+  "blockSending": {
+    "warn": "Edit message!"
+  },
+  "usersNotFound": "Users with name {{name}} not found",
+  "generalSettings": {
+    "title": "Settings",
+    "language": "Language",
+    "translation": "Set language translation",
+    "from": "From:",
+    "to": "To:",
+    "background": "Choose background",
+    "defaultBackground": "Set default background",
+    "fontSize": "Font Size"
+  }
 }
